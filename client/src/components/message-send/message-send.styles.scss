@@ -1,0 +1,18 @@
+.message-send-container {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  margin-bottom: 10px;
+
+  .message-send {
+    width: 70%;
+    height: 20px;
+    margin: 5px 5px 20px 0;
+  }
+
+  button {
+    padding: 0;
+    border: none;
+  }
+}

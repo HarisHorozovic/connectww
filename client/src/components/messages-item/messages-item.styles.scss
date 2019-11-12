@@ -1,0 +1,36 @@
+.message-item {
+  width: 80%;
+  margin: 3px 10px 5px 3px;
+  border: 1px solid #ccc;
+  box-shadow: 2px 5px 10px #888888;
+  border-radius: 4px;
+  background-image: linear-gradient(to bottom, #ff0099, #493240);
+  background-image: -moz-linear-gradient(to bottom, #ff0099, #493240);
+
+  .message-item-header {
+    width: 100%;
+
+    img {
+      width: 15px;
+      height: 15px;
+      margin-right: 5px;
+      border-radius: 50%;
+    }
+  }
+
+  .message {
+    font-size: 12px;
+  }
+
+  .from-user {
+    margin-left: auto;
+    background-image: linear-gradient(to top, #fc466b, #3f5efb);
+    background-image: -moz-linear-gradient(to top, #fc466b, #3f5efb);
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+}

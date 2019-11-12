@@ -1,0 +1,24 @@
+.sidebar-left {
+  width: 20vw;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  background: #203a43;
+  box-shadow: 2px 3px 10px #888888;
+
+  img {
+    height: 50px;
+    width: 50px;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  .btn-container {
+    margin: 10px 0;
+
+    .btn {
+      margin: 5px;
+    }
+  }
+}

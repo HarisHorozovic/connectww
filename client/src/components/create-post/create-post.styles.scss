@@ -1,0 +1,26 @@
+.create-post-item {
+  overflow: hidden;
+}
+
+.post-upload {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+
+  width: 100%;
+
+  input {
+    width: 70%;
+  }
+
+  a {
+    height: 20px;
+  }
+
+  .post-img-btn {
+    height: 20px;
+    width: 20px;
+    border: none;
+  }
+}

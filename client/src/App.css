@@ -1,0 +1,196 @@
+/* Body fix */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Yeon Sung', cursive;
+  color: #f4f4f4;
+  background-image: linear-gradient(to bottom, #0f2027, #203a43);
+  background-image: -moz-linear-gradient(to bottom, #0f2027, #203a43);
+}
+/* Global Styles for btns text, font etc */
+a,
+p {
+  font-family: 'Yeon Sung', cursive;
+  color: #f4f4f4;
+  text-decoration: none;
+  margin: 0;
+}
+a:hover {
+  text-decoration: underline;
+}
+.lead {
+  font-size: 12px;
+}
+.flex-full-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-hor-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.flex-row-end {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.flex-wrap-center {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-wrap-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 100vw;
+  padding: 100px 100px 30px 100px;
+}
+
+.flex-wrap-container2 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  max-width: 100vw;
+  padding: 0 100px 30px 100px;
+}
+
+.content-container {
+  background-color: #203a43;
+}
+
+input {
+  border: none;
+  border-bottom: 1px solid #ccc;
+  background: transparent;
+  margin: 20px;
+  color: #f4f4f4;
+  font-family: 'Yeon Sung', cursive;
+}
+
+button {
+  color: #f4f4f4;
+}
+
+textarea {
+  width: 100%;
+  height: 100%;
+  border: none;
+  padding: 0;
+  background: #203a43;
+  color: #f4f4f4;
+  font-family: 'Yeon Sung', cursive;
+}
+
+::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #f4f4f4;
+  opacity: 1; /* Firefox */
+}
+
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #f4f4f4;
+}
+
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #f4f4f4;
+}
+
+::-webkit-scrollbar {
+  width: 1px;
+}
+
+::-moz-scrollbar {
+  widows: 1px;
+}
+
+.card {
+  width: 90%;
+  background-color: #203a43;
+  margin: 0 10px 30px 10px;
+  box-shadow: 2px 3px 10px #888888;
+}
+
+.btn {
+  padding: 2px 4px;
+  font-size: 16px;
+  min-width: 30px;
+  text-align: center;
+  min-height: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-bottom: 5px;
+  font-family: 'Yeon Sung', cursive;
+}
+
+.btn-blue {
+  background-color: #03c6fc;
+  border-radius: 50%;
+  font-size: 22px;
+}
+
+.btn-blue:hover {
+  background: transparent;
+  color: #03c6fc;
+}
+
+.btn-red {
+  background-color: #ff0000;
+  font-size: 22px;
+}
+.btn-red:hover {
+  background: transparent;
+  color: #ff0000;
+}
+
+.btn-orange {
+  background-color: #ed5107;
+  font-size: 22px;
+}
+
+.btn-orange:hover {
+  background: transparent;
+  color: #ed5107;
+}
+
+.btn-green {
+  background-color: #32ff6a;
+}
+.btn-green:hover {
+  background: transparent;
+  color: #32ff6a;
+}
+
+.btn-grey {
+  color: #f4f4f4;
+  background-color: #203a43;
+}
+
+.btn-grad {
+  background-image: linear-gradient(to bottom, #fc466b, #3f5efb);
+  background-image: -moz-linear-gradient(to bottom, #fc466b, #3f5efb);
+}
+
+.btn-transparent {
+  background-color: transparent;
+  border: 1px solid #ccc;
+}
+
+.btn-grey:hover,
+.btn-grad:hover,
+.btn-transparent:hover {
+  background: transparent;
+  box-shadow: 2px 5px 15px #ccc;
+}

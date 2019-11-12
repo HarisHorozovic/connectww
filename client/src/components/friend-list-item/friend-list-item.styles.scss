@@ -1,0 +1,20 @@
+.friend-list-item {
+  margin: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+
+  .chat-img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+
+  .green-dot {
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+    background: lightgreen;
+    border-radius: 50%;
+  }
+}
