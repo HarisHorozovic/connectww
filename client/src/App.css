@@ -194,3 +194,7 @@ textarea {
   background: transparent;
   box-shadow: 2px 5px 15px #ccc;
 }
+
+.hidden {
+  display: none;
+}

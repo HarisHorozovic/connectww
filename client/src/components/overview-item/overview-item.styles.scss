@@ -1,0 +1,24 @@
+.full-width,
+.info-item {
+  width: 100%;
+}
+.info-header {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 5px;
+  border-bottom: 1px solid #ccc;
+
+  .info-container,
+  .experience-container,
+  .education-container {
+    padding: 10px;
+
+    .info-item,
+    .experience-item,
+    .education-item {
+      margin-bottom: 5px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #ccc;
+    }
+  }
+}

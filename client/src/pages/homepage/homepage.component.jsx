@@ -13,16 +13,22 @@ class HomePage extends React.Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.state = {
+      hidden: true
+    };
   }
+
+  toggleCreatePost = () => {
+    this.setState({ hidden: !this.state.hidden });
+  };
   render() {
     return (
       <div className='homepage'>
         <div className='flex-wrap-container'>
           <SidebarLeft />
           <div className='main-content flex-hor-center'>
-            <CreatePostToggle />
-            <CreatePost />
+            <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
+            <CreatePost hidden={this.state.hidden} />
             <PostContainer />
           </div>
         </div>

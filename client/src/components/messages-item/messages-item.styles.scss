@@ -22,15 +22,15 @@
     font-size: 12px;
   }
 
-  .from-user {
-    margin-left: auto;
-    background-image: linear-gradient(to top, #fc466b, #3f5efb);
-    background-image: -moz-linear-gradient(to top, #fc466b, #3f5efb);
-  }
-
   img {
     width: 100%;
     height: auto;
     object-fit: cover;
   }
+}
+
+.from-user {
+  margin-left: auto;
+  background-image: linear-gradient(to top, #fc466b, #3f5efb);
+  background-image: -moz-linear-gradient(to top, #fc466b, #3f5efb);
 }

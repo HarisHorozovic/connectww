@@ -6,21 +6,41 @@ class CreatePost extends React.Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.state = {
+      postText: '',
+      imageToUpload: null
+    };
   }
+
+  handleChange = e => {
+    this.setState({ postText: e.target.value });
+  };
+
+  createPost = () => {
+    console.log(this.state.postText);
+  };
   render() {
+    const { hidden } = this.props;
     return (
-      <div className='card create-post'>
+      <div className={`card create-post ${hidden ? 'hidden' : ''}`}>
         <div className='create-post-item'>
-          <textarea rows='10' placeholder='Say something...'></textarea>
+          <textarea
+            rows='10'
+            placeholder='Say something...'
+            onChange={this.handleChange}
+            value={this.state.postText}
+          ></textarea>
           <div className='post-upload'>
             <input type='text' placeholder='Image path' />
             <a href='/uploadImg' className='btn btn-grey'>
               &#x21ea;
             </a>
-            <a href='/postFn' className='btn post-img-btn btn-transparent'>
+            <div
+              className='btn post-img-btn btn-transparent'
+              onClick={this.createPost}
+            >
               &#x27A4;
-            </a>
+            </div>
           </div>
         </div>
       </div>

@@ -1,21 +1,36 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Comments = () => {
-  return (
-    <div className='comment-item flex-hor-center'>
-      <div className='comment-item-header flex-wrap-center'>
-        <img src='./img/user.png' alt='userImg' />
-        <a href='/userProfile'>Name</a>
-      </div>
-      <div className='comment-item-text'>
-        <p>Comment goes here</p>
-      </div>
-      <div className='create-comment flex-wrap-center'>
-        <input type='text' placeholder='Say something...' />
-        <button className='btn btn-transparent'>&#x27A4;</button>
-      </div>
-    </div>
-  );
-};
+import './comments.styles.scss';
 
-export default Comments;
+class CommentItem extends React.Component {
+  constructor() {
+    super();
+
+    this.state = {
+      userName: 'Haris',
+      userImg: ''
+    };
+  }
+
+  componentDidMount() {
+    // fetchUser(this.props.user);
+  }
+  render() {
+    const { text, createdAt, user } = this.props;
+    const { userName, userImg } = this.state;
+    return (
+      <div className='comment-item flex-hor-center'>
+        <div className='comment-item-header flex-wrap-center'>
+          <img src={userImg} alt='userImg' />
+          <Link to={`/profile/${user}`}>{userName}</Link>
+        </div>
+        <div className='comment-item-text'>
+          <p>{text}</p>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default CommentItem;
