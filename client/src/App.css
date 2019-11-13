@@ -89,6 +89,11 @@ textarea {
   font-family: 'Yeon Sung', cursive;
 }
 
+textarea:focus {
+  outline: none;
+  box-shadow: 2px 5px 15px #888888;
+}
+
 ::placeholder {
   /* Chrome, Firefox, Opera, Safari 10.1+ */
   color: #f4f4f4;
@@ -195,6 +200,39 @@ textarea {
   box-shadow: 2px 5px 15px #ccc;
 }
 
+/* A bit of tweaking for mobile view */
+
+@media only screen and (max-width: 1000px) {
+  .flex-wrap-container {
+    padding: 180px 100px 30px 100px !important;
+  }
+
+  .search-page-container {
+    padding-top: 180px !important;
+  }
+
+  .match-page {
+    padding-top: 60px !important;
+  }
+
+  .card {
+    width: 100% !important;
+  }
+
+  .sidebar-left,
+  .main-content,
+  .right-sidebar,
+  .gl-sidebar,
+  .gr-sidebar,
+  .mp-messages-container,
+  .mp-container,
+  .match-page .left-content,
+  .right-content,
+  .profile-content {
+    width: 90vw !important;
+  }
+}
+
 .hidden {
-  display: none;
+  display: none !important;
 }

@@ -1,0 +1,26 @@
+@mixin shrinkLabel {
+  font-size: 12px;
+}
+
+.input-group {
+  width: 100%;
+
+  input {
+    width: 50%;
+    height: 20px;
+    margin-top: 10px;
+
+    &:focus {
+      outline: none;
+      box-shadow: 2px 5px 15px #888888;
+    }
+
+    &:focus ~ label {
+      @include shrinkLabel();
+    }
+  }
+
+  label {
+    font-size: 18px;
+  }
+}

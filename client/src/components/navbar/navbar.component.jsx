@@ -7,13 +7,13 @@ const Navbar = () => {
   return (
     <nav className='navbar'>
       <div className='logo-container'>
-        <Link to='/' className='navbar-logo'>
+        <Link to='/home' className='navbar-logo'>
           <img src='./img/logo.png' alt='logo' />
         </Link>
       </div>
       <ul className='menu-container flex-row-end'>
         <li className='menu-item'>
-          <a href='/profiles'>Search Users</a>
+          <Link to='/users/search'>Search Users</Link>
         </li>
         <li className='menu-item'>
           <a href='/messaging'>Messaging</a>

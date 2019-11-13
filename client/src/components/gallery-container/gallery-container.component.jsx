@@ -13,17 +13,25 @@ class GalleryContainer extends React.Component {
   }
 
   render() {
+    let isOtherUser = this.props.match;
+    let uploadImg = (
+      <div className='main-gallery-header'>
+        <div className='flex-wrap-center upload-form'>
+          <input type='text' placeholder='Image path' />
+          <button className='btn btn-transparent select-btn'>&#x21ea;</button>
+          <button className='btn btn-grad'>&#x27A4;</button>
+        </div>
+      </div>
+    );
     return (
       <div className='gallery-main-content card flex-hor-center'>
-        <div className='main-gallery-header'>
-          <div className='flex-wrap-center upload-form'>
-            <input type='text' placeholder='Image path' />
-            <button className='btn btn-transparent select-btn'>&#x21ea;</button>
-            <button className='btn btn-grad'>&#x27A4;</button>
-          </div>
-        </div>
+        {isOtherUser !== undefined ? null : uploadImg}
         <div className='main-gallery-container flex-wrap-center'>
-          <GalleryItem />
+          {isOtherUser !== undefined ? (
+            <GalleryItem otherUser={false} />
+          ) : (
+            <GalleryItem otherUser={true} />
+          )}
         </div>
       </div>
     );

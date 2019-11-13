@@ -1,0 +1,21 @@
+.search-users-page {
+  width: 100vw;
+  position: relative;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  .search-page-container {
+    width: 100%;
+    padding-top: 100px;
+
+    .search-bar-container {
+      width: 100%;
+      height: 50px;
+      margin-bottom: 20px;
+    }
+    .users-container {
+      width: 100%;
+    }
+  }
+}

@@ -39,10 +39,17 @@ class ProfilePage extends React.Component {
   };
 
   render() {
+    const userId = this.props.match.params.userId;
+
     const posts = (
       <div className='full-width flex-hor-center'>
-        <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
-        <CreatePost hidden={this.state.hidden} />
+        {userId !== undefined ? null : (
+          <div className='full-width flex-hor-center'>
+            <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
+            <CreatePost hidden={this.state.hidden} />
+          </div>
+        )}
+
         <PostContainer />
       </div>
     );
@@ -54,16 +61,16 @@ class ProfilePage extends React.Component {
     );
     const gallery = (
       <div className='full-width flex-hor-center'>
-        <GalleryContainer />
+        <GalleryContainer match={userId} />
       </div>
     );
     return (
       <div className='profile-page'>
-        <div className='profile-background'>
+        <div className='profile-background flex-full-center'>
           <img src='../../../public/testall.jpg' alt='ProfileBackground' />
         </div>
         <div className='flex-wrap-container2'>
-          <SidebarLeft />
+          <SidebarLeft match={userId} />
           <div className='profile-content flex-hor-center'>
             <div className='card main-header flex-wrap-center'>
               <div className='user-img'>

@@ -5,7 +5,7 @@ import './messages-item.styles.scss';
 const MessageItem = ({ currUser, sender, text, img, createdAt }) => {
   //TODO: fetch sender and take his image here
   return (
-    <div className={`message-item ${currUser == sender ? 'from-user' : ''} `}>
+    <div className={`message-item ${currUser === sender ? 'from-user' : ''} `}>
       <div className='message-item-header'>
         <img src='./img/user.png' alt='userImg' />
       </div>

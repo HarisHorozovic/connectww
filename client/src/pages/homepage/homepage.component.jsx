@@ -25,7 +25,7 @@ class HomePage extends React.Component {
     return (
       <div className='homepage'>
         <div className='flex-wrap-container'>
-          <SidebarLeft />
+          <SidebarLeft location={'homepage'} />
           <div className='main-content flex-hor-center'>
             <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
             <CreatePost hidden={this.state.hidden} />

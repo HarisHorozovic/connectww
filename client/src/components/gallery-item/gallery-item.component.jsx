@@ -2,7 +2,7 @@ import React from 'react';
 
 import './gallery-item.styles.scss';
 
-const GalleryItem = ({ location }) => {
+const GalleryItem = ({ location, otherUser }) => {
   return (
     <div
       className={`${
@@ -17,9 +17,11 @@ const GalleryItem = ({ location }) => {
         <span href='/unlikeFn' className='btn btn-transparent post-btn'>
           &#x2661; <span>10</span>
         </span>
-        <span className='btn btn-transparent post-btn'>
-          &#x2699; <span>Main</span>
-        </span>
+        {otherUser === true ? (
+          <span className='btn btn-transparent post-btn'>
+            &#x2699; <span>Main</span>
+          </span>
+        ) : null}
       </div>
     </div>
   );

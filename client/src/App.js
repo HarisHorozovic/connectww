@@ -7,15 +7,21 @@ import './App.css';
 import Navbar from './components/navbar/navbar.component';
 import HomePage from './pages/homepage/homepage.component';
 import ProfilePage from './pages/profilepage/profile.component';
+import LandingPage from './pages/landing-page/landing-page.component';
+import EditProfilePage from './pages/edit-profile-page/edit-profile-page.component';
+import SearchUsersPage from './pages/search-users-page/search-users-page.component';
 
 function App() {
   return (
     <div>
       <Navbar />
       <Switch>
-        <Route exact path='/' component={HomePage} />
+        <Route exact path='/' component={LandingPage} />
+        <Route exact path='/home' component={HomePage} />
         <Route exact path='/profile' component={ProfilePage} />
-        <Route path='/profile/:userId' component={HomePage} />
+        <Route exact path='/profile/settings' component={EditProfilePage} />
+        <Route exact path='/profile/:userId' component={ProfilePage} />
+        <Route exact path='/users/search' component={SearchUsersPage} />
       </Switch>
     </div>
   );
