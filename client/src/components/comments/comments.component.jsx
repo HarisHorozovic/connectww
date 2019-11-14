@@ -23,6 +23,7 @@ class CommentItem extends React.Component {
       <div className='comment-item flex-hor-center'>
         <div className='comment-item-header flex-wrap-center'>
           <img src={userImg} alt='userImg' />
+          <p className='lead'>{createdAt}</p>
           <Link to={`/profile/${user}`}>{userName}</Link>
         </div>
         <div className='comment-item-text'>

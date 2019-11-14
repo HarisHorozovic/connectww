@@ -12,20 +12,18 @@ const Navbar = () => {
         </Link>
       </div>
       <ul className='menu-container flex-row-end'>
-        <li className='menu-item'>
-          <Link to='/users/search'>Search Users</Link>
-        </li>
-        <li className='menu-item'>
-          <a href='/messaging'>Messaging</a>
-        </li>
-        <li className='menu-item'>
-          <a href='/groups'>Groups</a>
-        </li>
-        <li className='menu-item'>
-          <a className='special-item' href='/matchnchat'>
-            Match 'N Chat
-          </a>
-        </li>
+        <Link to='/users/search' className='menu-item'>
+          Search Users
+        </Link>
+        <Link to='/messaging' className='menu-item'>
+          Messaging
+        </Link>
+        <Link to='/groups' className='menu-item'>
+          Groups
+        </Link>
+        <Link to='/match' className='menu-item'>
+          Match 'N Chat
+        </Link>
         <Link to='/profile' className='menu-item my-profile flex-row-end'>
           <img src='img/user.png' alt='UserImg' />
           <p>My Profile</p>

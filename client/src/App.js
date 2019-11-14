@@ -10,11 +10,14 @@ import ProfilePage from './pages/profilepage/profile.component';
 import LandingPage from './pages/landing-page/landing-page.component';
 import EditProfilePage from './pages/edit-profile-page/edit-profile-page.component';
 import SearchUsersPage from './pages/search-users-page/search-users-page.component';
+import MessagesPage from './pages/messages-page/messages-page.component';
+import GroupsPage from './pages/groups-page/groups-page.component';
+import MatchPage from './pages/match-page/match-page.component';
 
 function App() {
   return (
     <div>
-      <Navbar />
+      {window.location.pathname !== '/' ? <Navbar /> : null}
       <Switch>
         <Route exact path='/' component={LandingPage} />
         <Route exact path='/home' component={HomePage} />
@@ -22,6 +25,9 @@ function App() {
         <Route exact path='/profile/settings' component={EditProfilePage} />
         <Route exact path='/profile/:userId' component={ProfilePage} />
         <Route exact path='/users/search' component={SearchUsersPage} />
+        <Route exact path='/messaging' component={MessagesPage} />
+        <Route exact path='/groups' component={GroupsPage} />
+        <Route exact path='/match' component={MatchPage} />
       </Switch>
     </div>
   );

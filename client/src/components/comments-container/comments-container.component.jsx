@@ -4,6 +4,7 @@ import './comments-container.styles.scss';
 
 // Components
 import CommentItem from '../comments/comments.component';
+import FormInput from '../form-input/form-input.component';
 
 class CommentsContainer extends React.Component {
   constructor() {
@@ -23,7 +24,8 @@ class CommentsContainer extends React.Component {
           text: 'comment goes here',
           createdAt: 'created comment'
         }
-      ]
+      ],
+      commentText: ''
     };
   }
 
@@ -35,6 +37,15 @@ class CommentsContainer extends React.Component {
   componentDidMount() {
     // fetchComments(this.props.postId);
   }
+
+  handleChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
+
+  postComment = () => {
+    console.log(this.state.commentText);
+    this.setState({ commentText: '' });
+  };
 
   render() {
     const { hidden } = this.props;
@@ -53,8 +64,16 @@ class CommentsContainer extends React.Component {
           />
         ))}
         <div className='create-comment flex-wrap-center'>
-          <input type='text' placeholder='Say something...' />
-          <button className='btn btn-transparent'>&#x27A4;</button>
+          <FormInput
+            type='text'
+            name='commentText'
+            placeholder='Say something...'
+            value={this.state.commentText}
+            handleChange={this.handleChange}
+          />
+          <button className='btn btn-transparent' onClick={this.postComment}>
+            &#x27A4;
+          </button>
         </div>
       </div>
     );

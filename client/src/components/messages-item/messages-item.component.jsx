@@ -6,7 +6,7 @@ const MessageItem = ({ currUser, sender, text, img, createdAt }) => {
   //TODO: fetch sender and take his image here
   return (
     <div className={`message-item ${currUser === sender ? 'from-user' : ''} `}>
-      <div className='message-item-header'>
+      <div className='message-item-header flex-hor-center'>
         <img src='./img/user.png' alt='userImg' />
       </div>
 

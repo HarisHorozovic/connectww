@@ -18,6 +18,7 @@ class CreatePost extends React.Component {
 
   createPost = () => {
     console.log(this.state.postText);
+    this.setState({ postText: '' });
   };
   render() {
     const { hidden } = this.props;

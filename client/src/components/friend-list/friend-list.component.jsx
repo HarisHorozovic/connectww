@@ -31,7 +31,11 @@ class FriendList extends React.Component {
         <div className='friend-list-header' onClick={this.openFriendList}>
           <p>Online Friends</p>
         </div>
-        <div className={`friend-list-container ${hidden ? 'hidden' : ''}`}>
+        <div
+          className={`friend-list-container flex-hor-center ${
+            hidden ? 'hidden' : ''
+          }`}
+        >
           {friends === undefined
             ? 'No friends to show'
             : friends.map(friend => (

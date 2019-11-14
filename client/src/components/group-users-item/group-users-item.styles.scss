@@ -1,0 +1,23 @@
+.group-users-item {
+  width: 80%;
+  border: 1px solid #ccc;
+  box-shadow: 2px 5px 10px #888888;
+  cursor: pointer;
+  border-radius: 4px;
+  margin: 10px 0;
+
+  .group-users-info {
+    margin-right: 10px;
+
+    img {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+  }
+
+  .group-users-buttons .btn {
+    margin: 5px;
+    font-size: 12px;
+  }
+}

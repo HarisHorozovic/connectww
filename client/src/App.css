@@ -229,6 +229,7 @@ textarea:focus {
   .match-page .left-content,
   .right-content,
   .profile-content {
+    margin-top: 10px;
     width: 90vw !important;
   }
 }

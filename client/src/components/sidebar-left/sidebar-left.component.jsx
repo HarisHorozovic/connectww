@@ -3,6 +3,11 @@ import { Link } from 'react-router-dom';
 
 import './sidebar-left.styles.scss';
 
+// Components
+import EditFriendsContainer from '../edit-friends-container/edit-friends-container.component';
+import GroupsContainer from '../groups-container/groups-container.component';
+import CreateGroupContainer from '../create-group-container/create-group-container.component';
+
 const SidebarLeft = ({
   match,
   location,
@@ -72,19 +77,35 @@ const SidebarLeft = ({
       </li>
     </ul>
   );
+
+  let groupsPageSidebar = (
+    <div className='sidebar'>
+      <GroupsContainer />
+      <CreateGroupContainer />
+    </div>
+  );
   return (
     <div className='sidebar-left content-container flex-hor-center'>
-      <div>
-        <img src='./img/user.png' />
-        <p>My name</p>
-      </div>
-      {location === 'editprofile'
-        ? editProfileSidebar
-        : location === 'homepage'
-        ? fromHome
-        : match !== undefined
-        ? userOtherProfile
-        : userOwnProfile}
+      {location !== 'groupspage' ? (
+        <div>
+          <img src='./img/user.png' alt='userImg' />
+          <p>My name</p>
+        </div>
+      ) : null}
+
+      {location === 'editprofile' ? (
+        editProfileSidebar
+      ) : location === 'homepage' ? (
+        fromHome
+      ) : location === 'messagespage' ? (
+        <EditFriendsContainer />
+      ) : location === 'groupspage' ? (
+        groupsPageSidebar
+      ) : match !== undefined ? (
+        userOtherProfile
+      ) : (
+        userOwnProfile
+      )}
     </div>
   );
 };

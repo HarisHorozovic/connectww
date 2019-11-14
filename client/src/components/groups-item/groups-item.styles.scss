@@ -1,0 +1,13 @@
+.groups-item {
+  width: 80%;
+  border: 1px solid #ccc;
+  margin: 5px;
+  box-shadow: 2px 5px 10px #888888;
+  cursor: pointer;
+  border-radius: 4px;
+
+  .btn-container .btn-red {
+    font-size: 12px;
+    margin-left: 10px;
+  }
+}

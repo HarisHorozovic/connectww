@@ -1,0 +1,12 @@
+.messages-page {
+  width: 100vw;
+  position: relative;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  .groups-main-content {
+    width: 40vw;
+    height: 90vh;
+  }
+}

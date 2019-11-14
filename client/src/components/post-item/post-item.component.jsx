@@ -39,7 +39,7 @@ class PostItem extends React.Component {
       <div className='card post-item'>
         <div className='flex-full-center post-item-header'>
           <div className='user-meta flex-row-end'>
-            <img src={this.state.userImg} alt='userImg' />
+            <img src={userImg} alt='userImg' />
             <div className='text-info'>
               <Link to={`/profile/${user}`}>{userName}</Link>
               <p className='lead'>{createdAt}</p>

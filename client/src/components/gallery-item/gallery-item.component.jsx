@@ -9,7 +9,7 @@ const GalleryItem = ({ location, otherUser }) => {
         location === 'sidebar' ? 'sidebar-gallery-item' : 'main-gallery-item'
       }`}
     >
-      <img src='./img/testall.jpg' />
+      <img src='./img/testall.jpg' alt='GalleryImg' />
       <div className='btn-container flex-full-center'>
         <span href='/likeFn' className='btn btn-transparent post-btn'>
           &#x2764; <span>10</span>
