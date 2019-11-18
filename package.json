@@ -1,0 +1,22 @@
+{
+  "name": "connectww",
+  "version": "1.0.0",
+  "description": "Small FullStack application build with MERN stack",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HarisHorozovic/connectww.git"
+  },
+  "author": "Haris Horozovic",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HarisHorozovic/connectww/issues"
+  },
+  "homepage": "https://github.com/HarisHorozovic/connectww#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
