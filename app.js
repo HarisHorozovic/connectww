@@ -1,19 +1,29 @@
 const express = require('express');
+const morgan = require('morgan');
+
+// Routers
+const postRouter = require('./routes/post.routes');
+const userRouter = require('./routes/user.routes');
+const commentRouter = require('./routes/comment.routes');
 
 const app = express();
 
-const port = process.env.PORT || 5000;
+// Middlewares
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 
-app.get('/', (req, res) => {
-  res
-    .status(200)
-    .json({ message: 'Hello from the server side', app: 'ConnectWW' });
+app.use(express.json());
+
+app.use((req, res, next) => {
+  console.log(`Hello from the middleware`);
+
+  next();
 });
 
-app.post('/', (req, res) => {
-  res.send('Post endpoint');
-});
+// Routes
+app.use('/api/v1/posts', postRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/comments', commentRouter);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = app;
