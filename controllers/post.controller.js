@@ -1,115 +1,95 @@
 const Post = require('../models/post.model');
 const Comment = require('../models/comment.model');
+const catchAsync = require('../utils/catch-async');
+const AppError = require('../utils/app-error');
 
-exports.getAllPosts = async (req, res) => {
-  try {
-    const posts = await Post.find().sort({ createdAt: -1 });
+exports.getAllPosts = catchAsync(async (req, res, next) => {
+  const posts = await Post.find().sort({ createdAt: -1 });
 
-    res.status(200).json({
-      status: 'success',
-      results: posts.length,
-      data: {
-        posts
-      }
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      message: error.message
-    });
+  if (posts.length === 0) {
+    return next(new AppError('No posts to show', 404));
   }
-};
 
-exports.createPost = async (req, res, next) => {
-  try {
-    const post = await Post.create(req.body);
+  res.status(200).json({
+    status: 'success',
+    results: posts.length,
+    data: {
+      posts
+    }
+  });
+});
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        post
-      }
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      message: error.message
-    });
+exports.createPost = catchAsync(async (req, res, next) => {
+  const post = await Post.create(req.body);
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      post
+    }
+  });
+});
+
+exports.getPost = catchAsync(async (req, res, next) => {
+  const post = await Post.findById(req.params.id);
+
+  if (!post) {
+    return next(new AppError('Post not found', 404));
   }
-};
 
-exports.getPost = async (req, res) => {
-  try {
-    const post = await Post.findById(req.params.id);
+  res.status(200).json({
+    status: 'success',
+    data: {
+      post
+    }
+  });
+});
 
-    res.status(200).json({
-      status: 'success',
-      data: {
-        post
-      }
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      message: error.message
-    });
+exports.updatePost = catchAsync(async (req, res, next) => {
+  const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true
+  });
+
+  if (!post) {
+    return next(new AppError('No post found', 404));
   }
-};
 
-exports.updatePost = async (req, res) => {
-  try {
-    const post = await Post.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+  res.status(201).json({
+    status: 'success',
+    data: {
+      post
+    }
+  });
+});
 
-    res.status(201).json({
-      status: 'success',
-      data: {
-        post
-      }
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      message: error.message
-    });
+exports.deletePost = catchAsync(async (req, res, next) => {
+  const post = await Post.findByIdAndDelete(req.params.id);
+
+  if (!post) {
+    return next(new AppError('Post not found', 404));
   }
-};
 
-exports.deletePost = async (req, res) => {
-  try {
-    await Post.findByIdAndDelete(req.params.id);
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+});
 
-    res.status(204).json({
-      status: 'success',
-      data: null
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: 'fail',
-      message: error.message
-    });
+exports.getCommentsForPost = catchAsync(async (req, res, next) => {
+  const comments = await Comment.find({ post: req.params.id }).sort({
+    createdAt: -1
+  });
+
+  if (comments.length === 0) {
+    return next(new AppError('No comments for this post', 404));
   }
-};
 
-exports.getCommentsForPost = async (req, res) => {
-  try {
-    const comments = await Comment.find({ post: req.params.id }).sort({
-      createdAt: -1
-    });
-
-    res.status(200).json({
-      status: 'success',
-      results: comments.length,
-      data: {
-        comments
-      }
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: 'fail',
-      message: error.message
-    });
-  }
-};
+  res.status(200).json({
+    status: 'success',
+    results: comments.length,
+    data: {
+      comments
+    }
+  });
+});
