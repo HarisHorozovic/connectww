@@ -4,6 +4,7 @@ const router = express.Router();
 
 // Controllers
 const postController = require('../controllers/post.controller');
+const authController = require('../controllers/auth.controller');
 
 // @method GET
 // @route /api/v1/posts/
@@ -14,7 +15,7 @@ const postController = require('../controllers/post.controller');
 // @desc Create new post
 router
   .route('/')
-  .get(postController.getAllPosts)
+  .get(authController.protect, postController.getAllPosts)
   .post(postController.createPost);
 
 // @method GET

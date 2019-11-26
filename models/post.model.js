@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // inside likes in the object put user: ObjectId('user');
-const PostSchema = new mongoose.Schema({
+const postSchema = new mongoose.Schema({
   postImg: { type: String },
   text: { type: String, trim: true },
   createdAt: {
@@ -12,6 +12,6 @@ const PostSchema = new mongoose.Schema({
   dislikes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
-const Post = mongoose.model('Post', PostSchema);
+const Post = mongoose.model('Post', postSchema);
 
 module.exports = Post;
