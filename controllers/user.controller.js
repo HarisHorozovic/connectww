@@ -3,6 +3,15 @@ const User = require('../models/user.model');
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
 
+const filterObj = (obj, ...allowedFields) => {
+  const newObj = {};
+  Object.keys(obj).forEach(el => {
+    if (allowedFields.includes(el)) newObj[el] = obj[el];
+  });
+
+  return newObj;
+};
+
 exports.getAllUsers = (req, res) => {
   res.status(500).json({ status: 'error', message: 'Route not implemented' });
 };
@@ -23,10 +32,45 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({ status: 'error', message: 'Route not implemented' });
-};
+exports.updateUser = catchAsync(async (req, res, next) => {
+  // Create error if user posts password data
+  if (req.body.password || req.body.passwordConfirm)
+    return next(
+      new AppError(
+        'Can not update password here, use password update route',
+        400
+      )
+    );
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({ status: 'error', message: 'Route not implemented' });
-};
+  // Update user document
+  const filteredBody = filterObj(
+    req.body,
+    'firstName',
+    'lastName',
+    'DOB',
+    'gender',
+    'relationship',
+    'location',
+    'bio'
+  );
+  const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
+    new: true,
+    runValidators: true
+  });
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      user: updatedUser
+    }
+  });
+});
+
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user._id, { active: false });
+
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+});
