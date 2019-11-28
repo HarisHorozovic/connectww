@@ -1,52 +1,18 @@
 const Comment = require('../models/comment.model');
 
-exports.createComment = async (req, res, next) => {
-  try {
-    const comment = await Comment.create(req.body);
+const factory = require('./handler.factory');
 
-    res.status(201).json({
-      status: 'success',
-      comment
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      message: error.message
-    });
-  }
+// Set Post and user IDs
+
+exports.setPostUserIds = (req, res, next) => {
+  // Allow Nested Routes
+  if (!req.body.post) req.body.post = req.params.id;
+  if (!req.body.author) req.body.author = req.user._id;
+
+  next();
 };
 
-exports.updateComment = async (req, res) => {
-  try {
-    const comment = await Comment.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
-
-    res.status(201).json({
-      status: 'success',
-      comment
-    });
-  } catch (error) {
-    res.status(404).json({
-      status: 'fail',
-      message: error.message
-    });
-  }
-};
-
-exports.deleteComment = async (req, res) => {
-  try {
-    await Comment.findByIdAndDelete(req.params.id);
-
-    res.status(204).json({
-      tatus: 'success',
-      data: null
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'fail',
-      message: error.message
-    });
-  }
-};
+exports.createComment = factory.createOne(Comment);
+exports.getComments = factory.getAll(Comment);
+exports.updateComment = factory.updateOne(Comment);
+exports.deleteComment = factory.deleteOne(Comment);

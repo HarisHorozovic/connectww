@@ -30,8 +30,18 @@ const userSchema = mongoose.Schema({
   DOB: { type: Date },
   createdAt: { type: Date, default: Date().toString() },
   gender: { type: String, required: [true, 'You must select your gender'] },
-  relationship: { type: String },
-  location: { type: String },
+  relationship: { type: String, enum: ['male', 'female'] },
+  location: {
+    //GeoJSON
+    type: {
+      type: String,
+      default: 'Point',
+      enum: ['Point']
+    },
+    // Longitude first, Latitude last
+    coordinates: [Number],
+    address: String
+  },
   bio: { type: String },
   friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
@@ -63,6 +73,13 @@ const userSchema = mongoose.Schema({
     default: true,
     select: false
   }
+});
+
+// Virtual populate, how we connect children to the parent that the children are referencing
+userSchema.virtual('posts', {
+  ref: 'Post',
+  foreignField: 'author',
+  localField: '_id'
 });
 
 userSchema.pre('save', async function(next) {

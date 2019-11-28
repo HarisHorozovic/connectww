@@ -1,14 +1,23 @@
 const express = require('express');
 
-const router = express.Router();
-
 // Controllers
 const commentController = require('../controllers/comment.controller');
+const authController = require('../controllers/auth.controller');
+
+// We have to use merge params here to get access to the params from the other router
+const router = express.Router({ mergeParams: true });
 
 // @method POST
-// @route /api/v1/comments/
+// @route /api/v1/:postId/comments
 // @desc Create new comment
-router.route('/').post(commentController.createComment);
+router
+  .route('/')
+  .get(authController.protect, commentController.getComments)
+  .post(
+    authController.protect,
+    commentController.setPostUserIds,
+    commentController.createComment
+  );
 
 // @method PATCH
 // @route /api/v1/comments/:id
