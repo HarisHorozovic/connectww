@@ -20,6 +20,8 @@ const commentSchema = new mongoose.Schema({
   }
 });
 
+commentSchema.index({ author: 1, post: 1 }, { unique: true });
+
 const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;

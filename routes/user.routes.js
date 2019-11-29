@@ -18,6 +18,14 @@ router.patch(
   authController.updatePassword
 );
 
+router
+  .route('/geo-within/:distance/center/:latlng/unit/:unit')
+  .get(authController.protect, userController.geoWithin);
+
+router
+  .route('/distances/:latlng/unit/:unit')
+  .get(authController.protect, userController.getDistances);
+
 router.patch(
   '/update-user-data',
   authController.protect,

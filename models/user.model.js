@@ -75,6 +75,8 @@ const userSchema = mongoose.Schema({
   }
 });
 
+userSchema.index({ location: '2dsphere' });
+
 // Virtual populate, how we connect children to the parent that the children are referencing
 userSchema.virtual('posts', {
   ref: 'Post',

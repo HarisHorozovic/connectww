@@ -74,3 +74,67 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+// '/geo-within/:distance/center/:latlng/unit/:unit'
+
+exports.geoWithin = catchAsync(async (req, res, next) => {
+  const { distance, latlng, unit } = req.params;
+  const { lat, lng } = latlng.split(',');
+
+  if (!lat || !lng)
+    return next(new AppError('Please enable your location', 400));
+  // Radius is the distance we want to have as the radius but converted to radiants
+  // In order to get radiants we need to divide the distance by the radius of the earth
+  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
+
+  // This query finds docs inside certain geometry
+  const users = await User.find({
+    location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
+  });
+
+  res.status(200).json({
+    status: 'success',
+    results: users.length,
+    data: {
+      data: users
+    }
+  });
+});
+
+exports.getDistances = catchAsync(async (req, res, next) => {
+  const { latlng, unit } = req.params;
+  const { lat, lng } = latlng.split(',');
+
+  const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
+
+  if (!lat || !lng)
+    return next(new AppError('Please enable your location', 400));
+
+  // In order to do calculations we always use aggregation pipeline
+  const distances = await User.aggregate([
+    {
+      // geoNear requires that at least one of our fields has geoSpatial index
+      $geoNear: {
+        near: {
+          type: 'Point',
+          coordinates: [lng * 1, lat * 1]
+        },
+        distanceField: 'distance',
+        distanceMultiplier: multiplier
+      },
+      // project is used to define what data we want to keep in res, rest is ignored
+      $project: {
+        distance: 1,
+        firstName: 1,
+        lastName: 1
+      }
+    }
+  ]);
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: distances
+    }
+  });
+});

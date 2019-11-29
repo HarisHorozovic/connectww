@@ -36,6 +36,12 @@ exports.getAll = Model =>
     });
   });
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user._id;
+
+  next();
+};
+
 exports.getOne = (Model, popOpts) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
