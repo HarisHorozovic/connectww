@@ -7,7 +7,7 @@ const User = require('../models/user.model');
 
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
-const sendEmail = require('../utils/email');
+const Email = require('../utils/email');
 
 const signToken = id => {
   // Sign the token for the user, in the sign we first put the payload/ user info
@@ -77,6 +77,14 @@ exports.login = catchAsync(async (req, res, next) => {
   createAndSendToken(user, 200, res);
 });
 
+exports.logout = catchAsync(async (req, res, next) => {
+  res.cookie('jwt', 'logged-out', {
+    expires: new Date(Date.now()) + 10 * 1000,
+    httpOnly: true
+  });
+  res.status(200).json({ status: 'success' });
+});
+
 exports.protect = catchAsync(async (req, res, next) => {
   // Get the token and check if it exists
   let token;
@@ -120,20 +128,13 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
   // Send it to users email
   // Create the reset url for the user
-  const resetURL = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/reset-password/${resetToken}`;
-
-  const message = `Forgot your password? Submit your new password 
-  to: ${resetURL}\n If you didn't forget your password, 
-  ignore this email`;
 
   try {
-    await sendEmail({
-      email: user.email,
-      subject: 'ConnectWW password reset, valid for 10 minutes',
-      message
-    });
+    const resetURL = `${req.protocol}://${req.get(
+      'host'
+    )}/api/v1/users/reset-password/${resetToken}`;
+
+    await new Email(user, resetURL).sendPasswordReset();
 
     res.status(200).json({
       status: 'success',

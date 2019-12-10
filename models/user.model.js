@@ -31,27 +31,26 @@ const userSchema = mongoose.Schema({
   createdAt: { type: Date, default: Date().toString() },
   gender: { type: String, required: [true, 'You must select your gender'] },
   relationship: { type: String, enum: ['male', 'female'] },
-  location: {
-    //GeoJSON
-    type: {
-      type: String,
-      default: 'Point',
-      enum: ['Point']
-    },
-    // Longitude first, Latitude last
-    coordinates: [Number],
-    address: String
-  },
   bio: { type: String },
-  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
-  friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friends: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      name: String
+    }
+  ],
+  friendRequests: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+      name: String
+    }
+  ],
   experience: [
     {
       company: { type: String },
       position: { type: String },
       from: { type: Date },
       to: { type: Date },
-      current: { type: Boolean },
+      current: { type: Boolean, default: false },
       desc: { type: String }
     }
   ],
@@ -62,7 +61,7 @@ const userSchema = mongoose.Schema({
       studied: { type: String },
       from: { type: Date },
       to: { type: Date },
-      current: { type: Boolean },
+      current: { type: Boolean, default: false },
       desc: { type: String }
     }
   ],
@@ -85,7 +84,7 @@ userSchema.virtual('posts', {
 });
 
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password') || this.isNew) return next();
+  if (!this.isModified('password') || !this.isNew) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
 

@@ -12,13 +12,143 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = (req, res) => {
-  res.status(500).json({ status: 'error', message: 'Route not implemented' });
-};
+// Get friends from currently logged in user
+exports.getUserFriends = catchAsync(async (req, res, next) => {
+  const { friends } = req.user;
 
-exports.createUser = (req, res, next) => {
-  res.status(500).json({ status: 'error', message: 'Route not implemented' });
-};
+  if (!friends) return next(new AppError('No friends yet, add some', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      friends
+    }
+  });
+});
+
+// Get friend requests from currently logged in user
+exports.getFriendRequests = catchAsync(async (req, res, next) => {
+  const { friendRequests } = req.user;
+
+  if (!friendRequests) return next(new AppError('No new requests', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      friendRequests
+    }
+  });
+});
+
+// Add a friend
+exports.addFriend = catchAsync(async (req, res, next) => {
+  const newFriend = await User.findById(req.params.id);
+
+  if (!newFriend) return next(new AppError('Could not find the user', 404));
+
+  // Check to see if user already sent the request
+  const friendRequestExists = newFriend.friendRequests.map(request => {
+    return request.user === req.user._id;
+  });
+
+  // Check to see if user is already a friend
+  const friendExists = newFriend.friends.map(friend => {
+    return friend.user === req.user._id;
+  });
+
+  if (friendRequestExists.length > 0 || friendExists.length > 0) {
+    return next(
+      new AppError(
+        'Can not send request to this user, you are either their friend or already sent them a request',
+        400
+      )
+    );
+  }
+
+  if (
+    await newFriend.updateOne({
+      $push: {
+        friendRequests: { user: req.user._id, name: req.user.firstName }
+      }
+    })
+  ) {
+    res.status(200).json({
+      status: 'success',
+      message: 'Friend Request Sent',
+      newFriend
+    });
+  } else {
+    res.status(400).json({
+      status: 'fail',
+      message: 'Error occured while sending friend request'
+    });
+  }
+});
+
+// Accept friend request
+exports.acceptFriendRequest = catchAsync(async (req, res, next) => {
+  // Get both of the users that will be friends
+  const friend = await User.findById(req.body.friendId);
+  const { friendRequests } = req.user;
+
+  // Find index of the friend request
+  const index = friendRequests.findIndex(
+    request => request.user.toString() === req.body.friendId.toString()
+  );
+
+  // If there is a index then remove the user from the friend requests and put him in friends
+  // Also put the current users id in the friends list of the user that requested friendship
+  if (index !== -1) {
+    req.user.friends = friendRequests[index];
+    friendRequests.splice(index, 1);
+
+    if (
+      (await req.user.save({ validateBeforeSave: false })) &&
+      (await friend.updateOne({
+        $push: { friends: { user: req.user._id, name: req.user.name } }
+      }))
+    ) {
+      return res.status(200).json({
+        status: 'success'
+      });
+    }
+  }
+
+  // Return generic error if something failed
+  res.status(400).json({
+    status: 'fail',
+    message: 'Could not accept a friend request'
+  });
+});
+
+// Decline Friend Request
+exports.declineFriendRequest = catchAsync(async (req, res, next) => {
+  const { friendRequests } = req.user;
+
+  // Find index of the friend request
+  const index = friendRequests.findIndex(
+    request => request.user.toString() === req.body.friendId.toString()
+  );
+
+  // If there is friend request in database remove it
+  if (index !== -1) {
+    friendRequests.splice(index, 1);
+
+    if (await req.user.save({ validateBeforeSave: false })) {
+      res.status(200).json({
+        status: 'success',
+        message: 'Request succesfully removed'
+      });
+    }
+  }
+
+  res.status(400).json({
+    status: 'fail',
+    message: 'Error removing request, try again later'
+  });
+});
+
+// Get user
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);
 
@@ -32,6 +162,7 @@ exports.getUser = catchAsync(async (req, res, next) => {
   });
 });
 
+// Update currently logged in users info
 exports.updateUser = catchAsync(async (req, res, next) => {
   // Create error if user posts password data
   if (req.body.password || req.body.passwordConfirm)
@@ -53,6 +184,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     'location',
     'bio'
   );
+
   const updatedUser = await User.findByIdAndUpdate(req.user._id, filteredBody, {
     new: true,
     runValidators: true
@@ -66,6 +198,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   });
 });
 
+// Deactivate currently logged in uses account
 exports.deleteUser = catchAsync(async (req, res, next) => {
   await User.findByIdAndUpdate(req.user._id, { active: false });
 
@@ -75,66 +208,127 @@ exports.deleteUser = catchAsync(async (req, res, next) => {
   });
 });
 
-// '/geo-within/:distance/center/:latlng/unit/:unit'
-
-exports.geoWithin = catchAsync(async (req, res, next) => {
-  const { distance, latlng, unit } = req.params;
-  const { lat, lng } = latlng.split(',');
-
-  if (!lat || !lng)
-    return next(new AppError('Please enable your location', 400));
-  // Radius is the distance we want to have as the radius but converted to radiants
-  // In order to get radiants we need to divide the distance by the radius of the earth
-  const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
-
-  // This query finds docs inside certain geometry
-  const users = await User.find({
-    location: { $geoWithin: { $centerSphere: [[lng, lat], radius] } }
+// Add experience
+exports.addExperience = catchAsync(async (req, res, next) => {
+  const newExp = {
+    company: req.body.company,
+    position: req.body.position,
+    from: req.body.from,
+    to: req.body.to,
+    current: req.body.current,
+    desc: req.body.desc
+  };
+  await req.user.updateOne({
+    $push: { experience: newExp }
   });
 
   res.status(200).json({
     status: 'success',
-    results: users.length,
-    data: {
-      data: users
-    }
+    experience: newExp
   });
 });
-
-exports.getDistances = catchAsync(async (req, res, next) => {
-  const { latlng, unit } = req.params;
-  const { lat, lng } = latlng.split(',');
-
-  const multiplier = unit === 'mi' ? 0.000621371 : 0.001;
-
-  if (!lat || !lng)
-    return next(new AppError('Please enable your location', 400));
-
-  // In order to do calculations we always use aggregation pipeline
-  const distances = await User.aggregate([
+// Edit experience
+exports.updateExperience = catchAsync(async (req, res, next) => {
+  await User.findOneAndUpdate(
+    { _id: req.user._id, 'experience._id': req.params.id },
     {
-      // geoNear requires that at least one of our fields has geoSpatial index
-      $geoNear: {
-        near: {
-          type: 'Point',
-          coordinates: [lng * 1, lat * 1]
-        },
-        distanceField: 'distance',
-        distanceMultiplier: multiplier
-      },
-      // project is used to define what data we want to keep in res, rest is ignored
-      $project: {
-        distance: 1,
-        firstName: 1,
-        lastName: 1
+      $set: {
+        'experience.$.company': req.body.company,
+        'experience.$.position': req.body.position,
+        'experience.$.from': req.body.from,
+        'experience.$.to': req.body.to,
+        'experience.$.current': req.body.current,
+        'experience.$.desc': req.body.desc
       }
     }
-  ]);
+  );
 
   res.status(200).json({
     status: 'success',
-    data: {
-      data: distances
-    }
+    message: 'Experience updated'
   });
+});
+// Remove experience
+exports.removeExperience = catchAsync(async (req, res, next) => {
+  const { experience } = req.user;
+
+  const index = experience.findIndex(
+    el => el._id.toString() === req.params.id.toString()
+  );
+
+  // If there is friend request in database remove it
+  if (index !== -1) {
+    experience.splice(index, 1);
+
+    if (await req.user.save({ validateBeforeSave: false })) {
+      res.status(200).json({
+        status: 'success',
+        message: 'Experience succesfully removed'
+      });
+    }
+  }
+});
+
+// Add education
+exports.addEducation = catchAsync(async (req, res, next) => {
+  const newEdu = {
+    school: req.body.school,
+    degree: req.body.degree,
+    studied: req.body.studied,
+    from: req.body.from,
+    to: req.body.to,
+    current: req.body.current,
+    desc: req.body.desc
+  };
+  await req.user.updateOne({
+    $push: { education: newEdu }
+  });
+
+  res.status(200).json({
+    status: 'success',
+    education: newEdu
+  });
+});
+// Edit Education
+exports.updateEducation = catchAsync(async (req, res, next) => {
+  await User.findOneAndUpdate(
+    { _id: req.user._id, 'education._id': req.params.id },
+    {
+      $set: {
+        'education.$.school': req.body.school,
+        'education.$.degree': req.body.degree,
+        'education.$.studied': req.body.studied,
+        'education.$.from': req.body.from,
+        'education.$.to': req.body.to,
+        'education.$.current': req.body.current,
+        'education.$.desc': req.body.desc
+      }
+    }
+  );
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Education updated'
+  });
+});
+// Remove Education
+
+exports.removeEducation = catchAsync(async (req, res, next) => {
+  const { education } = req.user;
+
+  const index = education.findIndex(
+    el => el._id.toString() === req.params.id.toString()
+  );
+
+  // If there is friend request in database remove it
+  if (index !== -1) {
+    education.splice(index, 1);
+
+    if (await req.user.save({ validateBeforeSave: false })) {
+      res.status(200).json({
+        status: 'success',
+        message: 'Education succesfully removed'
+      });
+    }
+  }
 });
