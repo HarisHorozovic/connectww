@@ -7,7 +7,8 @@ const commentSchema = new mongoose.Schema({
   },
   post: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Post'
+    ref: 'Post',
+    required: [true, 'You must create comment for specific post']
   },
   text: {
     type: String,
@@ -21,6 +22,15 @@ const commentSchema = new mongoose.Schema({
 });
 
 commentSchema.index({ author: 1, post: 1 }, { unique: true });
+
+commentSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'author',
+    select: 'firstName lastName userImg'
+  });
+
+  next();
+});
 
 const Comment = mongoose.model('Comment', commentSchema);
 

@@ -43,20 +43,22 @@ exports.getFriendRequests = catchAsync(async (req, res, next) => {
 // Add a friend
 exports.addFriend = catchAsync(async (req, res, next) => {
   const newFriend = await User.findById(req.params.id);
+  const { friendRequests, friends } = newFriend;
 
   if (!newFriend) return next(new AppError('Could not find the user', 404));
 
-  // Check to see if user already sent the request
-  const friendRequestExists = newFriend.friendRequests.map(request => {
-    return request.user === req.user._id;
-  });
+  const usersInReq = [];
+  const usersInFriends = [];
 
-  // Check to see if user is already a friend
-  const friendExists = newFriend.friends.map(friend => {
-    return friend.user === req.user._id;
-  });
+  // Map through requests and friends and return the users, then after that check if those new arrays contain req.user._id
+  // Convert all IDs to string to enable includes comparison
+  friendRequests.map(request => usersInReq.push(request.user.toString()));
+  friends.map(friend => usersInFriends.push(friend.user.toString()));
 
-  if (friendRequestExists.length > 0 || friendExists.length > 0) {
+  if (
+    usersInReq.includes(req.user._id.toString()) ||
+    usersInFriends.includes(req.user._id.toString())
+  ) {
     return next(
       new AppError(
         'Can not send request to this user, you are either their friend or already sent them a request',

@@ -1,18 +1,78 @@
 const Comment = require('../models/comment.model');
 
-const factory = require('./handler.factory');
+const catchAsync = require('../utils/catch-async');
+const AppError = require('../utils/app-error');
 
-// Set Post and user IDs
+// Create comment for specific post
+exports.createComment = catchAsync(async (req, res, next) => {
+  const commentBody = {
+    post: req.params.id,
+    author: req.user._id,
+    text: req.body.text
+  };
 
-exports.setPostUserIds = (req, res, next) => {
-  // Allow Nested Routes
-  if (!req.body.post) req.body.post = req.params.id;
-  if (!req.body.author) req.body.author = req.user._id;
+  const comment = await Comment.create(commentBody);
 
-  next();
-};
+  if (!comment) return next(new AppError('Error commenting on this post', 400));
 
-exports.createComment = factory.createOne(Comment);
-exports.getComments = factory.getAll(Comment);
-exports.updateComment = factory.updateOne(Comment);
-exports.deleteComment = factory.deleteOne(Comment);
+  res.status(201).json({
+    status: 'success',
+    message: 'Comment created succesfully',
+    comment
+  });
+});
+
+// Get all comments for single post
+exports.getComments = catchAsync(async (req, res, next) => {
+  const comments = await Comment.find({ post: req.params.id });
+
+  if (!comments) return next(new AppError('No comments for this post', 404));
+
+  res.status(200).json({
+    status: 'success',
+    comments
+  });
+});
+
+// Update Comment
+exports.updateComment = catchAsync(async (req, res, next) => {
+  const comment = await Comment.findById(req.params.commentId);
+
+  // Send error if someone else except comment author tries to update comment
+  if (comment.author._id.toString() !== req.user._id.toString())
+    return next(
+      new AppError('You are not the comment author, access denied', 400)
+    );
+
+  comment.text = req.body.text;
+
+  if (await comment.save()) {
+    return res.status(200).json({
+      status: 'success',
+      message: 'Comment updated successfully',
+      comment
+    });
+  }
+
+  next(new AppError('Error updating comment', 400));
+});
+
+// Delete comment
+exports.deleteComment = catchAsync(async (req, res, next) => {
+  const comment = await Comment.findById(req.params.commentId);
+
+  // Send error if someone else except comment author tries to update comment
+  if (comment.author._id.toString() !== req.user._id.toString())
+    return next(
+      new AppError('You are not the comment author, access denied', 400)
+    );
+
+  if (await comment.remove()) {
+    return res.status(200).json({
+      status: 'success',
+      message: 'Comment removed successfully'
+    });
+  }
+
+  next(new AppError('Error removing comment', 400));
+});

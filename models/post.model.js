@@ -29,10 +29,15 @@ postSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'author',
     select: 'firstName lastName userImg'
-  }).populate({
-    path: 'likes',
-    select: 'firstName lastName userImg'
-  });
+  })
+    .populate({
+      path: 'likes',
+      select: 'firstName lastName userImg'
+    })
+    .populate({
+      path: 'dislikes',
+      select: 'firstName, lastName, userImg'
+    });
 
   next();
 });
