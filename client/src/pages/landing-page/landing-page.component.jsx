@@ -1,6 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './landing-page.styles.scss';
+
+import { setCurrentUser } from '../../redux/user/user.actions';
 
 // Components
 import Login from '../../components/login/login.component';
@@ -14,6 +17,14 @@ class LandingPage extends React.Component {
       toHide: 'register'
     };
   }
+
+  componentDidMount() {
+    this.props.setCurrentUser({
+      _id: 'asdasdadasd',
+      name: 'sdmsdofsdmsdofasd'
+    });
+  }
+
   showLogin = () => {
     this.setState({ toHide: 'register' });
   };
@@ -51,4 +62,8 @@ class LandingPage extends React.Component {
   }
 }
 
-export default LandingPage;
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+
+export default connect(null, mapDispatchToProps)(LandingPage);

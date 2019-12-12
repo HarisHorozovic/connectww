@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { setUser } from '../../redux/user/user.actions';
 
 import './homepage.styles.scss';
 
@@ -16,6 +19,13 @@ class HomePage extends React.Component {
     this.state = {
       hidden: true
     };
+  }
+
+  componentDidMount() {
+    this.props.setUser({
+      email: 'haris@email.ca',
+      password: 'test1234'
+    });
   }
 
   toggleCreatePost = () => {
@@ -38,4 +48,8 @@ class HomePage extends React.Component {
   }
 }
 
-export default HomePage;
+const mapDispatchToProps = dispatch => ({
+  setUser: user => dispatch(setUser(user))
+});
+
+export default connect(null, mapDispatchToProps)(HomePage);

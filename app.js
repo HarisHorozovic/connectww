@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const cors = require('cors');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error.controller');
@@ -15,6 +16,8 @@ const userRouter = require('./routes/user.routes');
 const commentRouter = require('./routes/comment.routes');
 
 const app = express();
+app.use(cors());
+app.options('*', cors());
 
 // Middlewares
 if (process.env.NODE_ENV === 'development') {

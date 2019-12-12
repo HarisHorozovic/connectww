@@ -1,5 +1,6 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import './App.css';
 
@@ -14,12 +15,18 @@ import MessagesPage from './pages/messages-page/messages-page.component';
 import GroupsPage from './pages/groups-page/groups-page.component';
 import MatchPage from './pages/match-page/match-page.component';
 
-function App() {
+function App({ currentUser }) {
   return (
     <div>
       {window.location.pathname !== '/' ? <Navbar /> : null}
       <Switch>
-        <Route exact path='/' component={LandingPage} />
+        <Route
+          exact
+          path='/'
+          render={() =>
+            currentUser ? <Redirect to='/home' /> : <LandingPage />
+          }
+        />
         <Route exact path='/home' component={HomePage} />
         <Route exact path='/profile' component={ProfilePage} />
         <Route exact path='/profile/settings' component={EditProfilePage} />
@@ -33,4 +40,8 @@ function App() {
   );
 }
 
-export default App;
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser
+});
+
+export default connect(mapStateToProps)(App);
