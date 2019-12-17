@@ -25,9 +25,12 @@ const createAndSendToken = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
+    secure: false,
     httpOnly: true
   };
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+
+  // Put the cookie on the response object
   res.cookie('jwt', token, cookieOptions);
 
   //Remove password from the output
@@ -41,6 +44,19 @@ const createAndSendToken = (user, statusCode, res) => {
     }
   });
 };
+
+exports.isLoggedIn = catchAsync(async (req, res, next) => {
+  const { user } = req;
+
+  if (!user) return next(new AppError('Log in to continue', 401));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user
+    }
+  });
+});
 
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
@@ -79,7 +95,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = catchAsync(async (req, res, next) => {
   res.cookie('jwt', 'logged-out', {
-    expires: new Date(Date.now()) + 10 * 1000,
+    expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true
   });
   res.status(200).json({ status: 'success' });
@@ -88,11 +104,16 @@ exports.logout = catchAsync(async (req, res, next) => {
 exports.protect = catchAsync(async (req, res, next) => {
   // Get the token and check if it exists
   let token;
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
+  // Get token from req.headers instead of the cookie if needed
+  // if (
+  //   req.headers.authorization &&
+  //   req.headers.authorization.startsWith('Bearer')
+  // ) {
+  //   token = req.headers.authorization.split(' ')[1];
+  // }
+  // If there is a jwt cookie and if it is not the cookie we set on the logout, set the token to the one from the cookie
+  if (req.cookies.jwt && req.cookies.jwt !== 'logged-out') {
+    token = req.cookies.jwt;
   }
 
   if (!token) return next(new AppError('Log in to continue', 401));

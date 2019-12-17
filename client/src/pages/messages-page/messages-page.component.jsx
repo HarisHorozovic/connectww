@@ -1,4 +1,8 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { isLoggedIn } from '../../redux/user/user.actions';
 
 import './messages-page.styles.scss';
 
@@ -36,35 +40,52 @@ class MessagesPage extends React.Component {
     };
   }
 
-  render() {
-    const { messageSession } = this.state;
-    return (
-      <div className='messages-page'>
-        <div className='messages-page-container flex-wrap-container'>
-          <SidebarLeft location='messagespage' />
+  componentDidMount() {
+    if (!this.props.currentUser) {
+      this.props.isLoggedIn();
+    }
+  }
 
-          <div className='main-content flex-hor-center'>
-            <div className='mp-container flex-hor-center'>
-              {messageSession.messages.map(message => (
-                <MessageItem
-                  key={message._id}
-                  currUser={messageSession.user}
-                  sender={message.sender}
-                  text={message.text}
-                  img={message.sentImg}
-                  createdAt={message.createdAt}
+  render() {
+    if (!this.props.currentUser) {
+      return <Redirect to='/' />;
+    } else {
+      const { messageSession } = this.state;
+      return (
+        <div className='messages-page'>
+          <div className='messages-page-container flex-wrap-container'>
+            <SidebarLeft location='messagespage' />
+
+            <div className='main-content flex-hor-center'>
+              <div className='mp-container flex-hor-center'>
+                {messageSession.messages.map(message => (
+                  <MessageItem
+                    key={message._id}
+                    currUser={messageSession.user}
+                    sender={message.sender}
+                    text={message.text}
+                    img={message.sentImg}
+                    createdAt={message.createdAt}
+                  />
+                ))}
+                <MessageSend
+                  messageSession={messageSession._id}
+                  messages={messageSession.messages}
                 />
-              ))}
-              <MessageSend
-                messageSession={messageSession._id}
-                messages={messageSession.messages}
-              />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
 
-export default MessagesPage;
+const mapDispatchToProps = dispatch => ({
+  isLoggedIn: () => dispatch(isLoggedIn())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(MessagesPage);

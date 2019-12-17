@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { login } from '../../redux/user/user.actions';
 
 import './login.styles.scss';
 
@@ -21,8 +24,12 @@ class Login extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const userObj = {
+      email: this.state.email,
+      password: this.state.password
+    };
 
-    console.log(this.state);
+    this.props.login(userObj);
   };
 
   render() {
@@ -52,4 +59,8 @@ class Login extends React.Component {
   }
 }
 
-export default Login;
+const mapDispatchToProps = dispatch => ({
+  login: user => dispatch(login(user))
+});
+
+export default connect(null, mapDispatchToProps)(Login);

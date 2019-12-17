@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { register } from '../../redux/user/user.actions';
 
 import './register.styles.scss';
 
@@ -14,8 +17,9 @@ class Register extends React.Component {
       lastName: '',
       email: '',
       password: '',
-      confirmPassword: '',
-      dob: ''
+      passwordConfirm: '',
+      DOB: '',
+      gender: 'male'
     };
   }
 
@@ -25,8 +29,17 @@ class Register extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const userObj = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      email: this.state.email,
+      password: this.state.password,
+      passwordConfirm: this.state.passwordConfirm,
+      DOB: this.state.DOB,
+      gender: this.state.gender
+    };
 
-    console.log(this.state);
+    this.props.register(userObj);
   };
 
   render() {
@@ -73,7 +86,7 @@ class Register extends React.Component {
 
         <FormInput
           type='password'
-          name='confirmPassword'
+          name='passwordConfirm'
           placeholder='Confirm Password'
           required
           onChange={this.handleChange}
@@ -82,7 +95,7 @@ class Register extends React.Component {
 
         <FormInput
           type='date'
-          name='dob'
+          name='DOB'
           required
           onChange={this.handleChange}
           value={this.state.dob}
@@ -96,4 +109,8 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+const mapDispatchToProps = dispatch => ({
+  register: user => dispatch(register(user))
+});
+
+export default connect(null, mapDispatchToProps)(Register);

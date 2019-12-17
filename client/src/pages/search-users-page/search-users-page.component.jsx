@@ -1,4 +1,8 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { isLoggedIn } from '../../redux/user/user.actions';
 
 import './search-users-page.styles.scss';
 
@@ -38,6 +42,12 @@ class SearchUsersPage extends React.Component {
     };
   }
 
+  componentDidMount() {
+    if (!this.props.currentUser) {
+      this.props.isLoggedIn();
+    }
+  }
+
   handleChange = e => {
     this.setState({ search: e.target.value });
     console.log(this.state.search);
@@ -48,36 +58,48 @@ class SearchUsersPage extends React.Component {
   };
 
   render() {
-    const { matchingUsers } = this.state;
-    return (
-      <div className='search-users-page'>
-        <div className='search-page-container flex-hor-center'>
-          <div className='search-bar-container flex-wrap-center'>
-            <FormInput
-              type='text'
-              placeholder='Search Users'
-              value={this.state.search}
-              handleChange={this.handleChange}
-            />
+    if (!this.props.currentUser) {
+      return <Redirect to='/' />;
+    } else {
+      const { matchingUsers } = this.state;
+      return (
+        <div className='search-users-page'>
+          <div className='search-page-container flex-hor-center'>
+            <div className='search-bar-container flex-wrap-center'>
+              <FormInput
+                type='text'
+                placeholder='Search Users'
+                value={this.state.search}
+                handleChange={this.handleChange}
+              />
+            </div>
+            <div className='users-container flex-wrap-center'>
+              {matchingUsers !== []
+                ? matchingUsers.map(user => (
+                    <SearchResultItem
+                      key={user._id}
+                      userId={user._id}
+                      profileImg={user.profileImg}
+                      name={user.name}
+                      addFriend={() => this.addFriend(user._id)}
+                    />
+                  ))
+                : null}
+            </div>
           </div>
-          <div className='users-container flex-wrap-center'>
-            {matchingUsers !== []
-              ? matchingUsers.map(user => (
-                  <SearchResultItem
-                    key={user._id}
-                    userId={user._id}
-                    profileImg={user.profileImg}
-                    name={user.name}
-                    addFriend={() => this.addFriend(user._id)}
-                  />
-                ))
-              : null}
-          </div>
+          <MessagingContainer />
         </div>
-        <MessagingContainer />
-      </div>
-    );
+      );
+    }
   }
 }
 
-export default SearchUsersPage;
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+const mapDispatchToProps = dispatch => ({
+  isLoggedIn: () => dispatch(isLoggedIn())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchUsersPage);

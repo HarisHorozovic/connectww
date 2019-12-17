@@ -150,6 +150,19 @@ exports.declineFriendRequest = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const users = await User.find();
+
+  if (!users) return next(new AppError('No users to show', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      users
+    }
+  });
+});
+
 // Get user
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.params.id);

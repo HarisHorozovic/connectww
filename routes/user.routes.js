@@ -14,10 +14,6 @@ router.post('/signup', authController.signup);
 // @route /api/v1/users/login
 // @desc log the user in, issue the JWT, save JWT to cookie
 router.post('/login', authController.login);
-// @method GET
-// @route /api/v1/users/logout
-// @desc log the user out and clear the cookie
-router.get('/logout', authController.logout);
 
 // @method POST
 // @route /api/v1/users/forgot-password
@@ -31,14 +27,20 @@ router.patch('/reset-password/:token', authController.resetPassword);
 // Allow routes only for logged in users, function saves user to the req.user
 router.use(authController.protect);
 
+// @method POST
+// @route /api/v1/users/is-logged-in
+// @desc Check if the user is currently logged in
+router.get('/is-logged-in', authController.isLoggedIn);
+
+// @method GET
+// @route /api/v1/users/logout
+// @desc log the user out and clear the cookie
+router.get('/logout', authController.logout);
+
 // @method PATCH
 // @route /api/v1/users/update-password
 // @desc Update password for the currently logged in user
-router.patch(
-  '/update-password',
-  authController.protect,
-  authController.updatePassword
-);
+router.patch('/update-password', authController.updatePassword);
 
 // @method PATCH
 // @route /api/v1/users/update-user-data
@@ -56,6 +58,23 @@ router
   .route('/')
   .get(userController.getUserFriends)
   .delete(userController.deleteUser);
+
+// @method GET
+// @route /api/v1/users/all
+// @desc Get all users so we can search them on the frontend
+router.route('/all').get(userController.getAllUsers);
+
+// @method GET
+// @route /api/v1/users/:id
+// @desc Get single user
+
+// @method POST
+// @route /api/v1/users/:id
+// @desc Send friend request to the user
+router
+  .route('/:id')
+  .get(userController.getUser)
+  .post(userController.addFriend);
 
 // @method PATCH
 // @route /api/v1/users/update-password
@@ -102,17 +121,5 @@ router
   .route('/experience/:id')
   .patch(userController.updateExperience)
   .delete(userController.removeExperience);
-
-// @method GET
-// @route /api/v1/users/:id
-// @desc Get single user
-
-// @method POST
-// @route /api/v1/users/:id
-// @desc Send friend request to the user
-router
-  .route('/:id')
-  .get(userController.getUser)
-  .post(userController.addFriend);
 
 module.exports = router;

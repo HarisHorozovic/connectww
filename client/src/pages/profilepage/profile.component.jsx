@@ -1,4 +1,8 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { isLoggedIn } from '../../redux/user/user.actions';
 
 import './profile.styles.scss';
 
@@ -22,6 +26,12 @@ class ProfilePage extends React.Component {
     };
   }
 
+  componentDidMount() {
+    if (!this.props.currentUser) {
+      this.props.isLoggedIn();
+    }
+  }
+
   toggleCreatePost = () => {
     this.setState({ hidden: !this.state.hidden });
   };
@@ -39,76 +49,88 @@ class ProfilePage extends React.Component {
   };
 
   render() {
-    const userId = this.props.match.params.userId;
+    if (!this.props.currentUser) {
+      return <Redirect to='/' />;
+    } else {
+      const userId = this.props.match.params.userId;
 
-    const posts = (
-      <div className='full-width flex-hor-center'>
-        {userId !== undefined ? null : (
-          <div className='full-width flex-hor-center'>
-            <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
-            <CreatePost hidden={this.state.hidden} />
-          </div>
-        )}
-
-        <PostContainer />
-      </div>
-    );
-
-    const info = (
-      <div className='full-width flex-hor-center'>
-        <OverviewContainer />
-      </div>
-    );
-    const gallery = (
-      <div className='full-width flex-hor-center'>
-        <GalleryContainer match={userId} />
-      </div>
-    );
-    return (
-      <div className='profile-page'>
-        <div className='profile-background flex-full-center'>
-          <img src='../../../public/testall.jpg' alt='ProfileBackground' />
-        </div>
-        <div className='flex-wrap-container2'>
-          <SidebarLeft match={userId} />
-          <div className='profile-content flex-hor-center'>
-            <div className='card main-header flex-wrap-center'>
-              <div className='user-img'>
-                <img src='./img/user.png' alt='userImg' />
-              </div>
-              <div className='btn-container flex-wrap-center main-header-subnav'>
-                <span
-                  onClick={this.showPosts}
-                  className='btn btn-transparent post-btn'
-                >
-                  Feed
-                </span>
-                <span
-                  onClick={this.showInfo}
-                  className='btn btn-transparent post-btn'
-                >
-                  Info
-                </span>
-                <span
-                  onClick={this.showGallery}
-                  className='btn btn-transparent post-btn'
-                >
-                  Gallery
-                </span>
-              </div>
+      const posts = (
+        <div className='full-width flex-hor-center'>
+          {userId !== undefined ? null : (
+            <div className='full-width flex-hor-center'>
+              <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
+              <CreatePost hidden={this.state.hidden} />
             </div>
-            {this.state.showSection === 'feed'
-              ? posts
-              : this.state.showSection === 'info'
-              ? info
-              : gallery}
-          </div>
-          <SidebarRight title={'Gallery'} />
+          )}
+
+          <PostContainer />
         </div>
-        <MessagingContainer />
-      </div>
-    );
+      );
+
+      const info = (
+        <div className='full-width flex-hor-center'>
+          <OverviewContainer />
+        </div>
+      );
+      const gallery = (
+        <div className='full-width flex-hor-center'>
+          <GalleryContainer match={userId} />
+        </div>
+      );
+      return (
+        <div className='profile-page'>
+          <div className='profile-background flex-full-center'>
+            <img src='../../../public/testall.jpg' alt='ProfileBackground' />
+          </div>
+          <div className='flex-wrap-container2'>
+            <SidebarLeft match={userId} />
+            <div className='profile-content flex-hor-center'>
+              <div className='card main-header flex-wrap-center'>
+                <div className='user-img'>
+                  <img src='./img/user.png' alt='userImg' />
+                </div>
+                <div className='btn-container flex-wrap-center main-header-subnav'>
+                  <span
+                    onClick={this.showPosts}
+                    className='btn btn-transparent post-btn'
+                  >
+                    Feed
+                  </span>
+                  <span
+                    onClick={this.showInfo}
+                    className='btn btn-transparent post-btn'
+                  >
+                    Info
+                  </span>
+                  <span
+                    onClick={this.showGallery}
+                    className='btn btn-transparent post-btn'
+                  >
+                    Gallery
+                  </span>
+                </div>
+              </div>
+              {this.state.showSection === 'feed'
+                ? posts
+                : this.state.showSection === 'info'
+                ? info
+                : gallery}
+            </div>
+            <SidebarRight title={'Gallery'} />
+          </div>
+          <MessagingContainer />
+        </div>
+      );
+    }
   }
 }
 
-export default ProfilePage;
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+const mapDispatchToProps = dispatch => ({
+  isLoggedIn: () => dispatch(isLoggedIn())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);

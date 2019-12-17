@@ -6,6 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const AppError = require('./utils/app-error');
 const globalErrorHandler = require('./controllers/error.controller');
@@ -16,8 +17,34 @@ const userRouter = require('./routes/user.routes');
 const commentRouter = require('./routes/comment.routes');
 
 const app = express();
-app.use(cors());
-app.options('*', cors());
+app.use(express.json());
+// Initial cors setup, can be changed, but leave it here for now
+app.use(
+  cors({
+    origin: [`${process.env.CORS_ALLOWED_ORIGIN}`, 'http://localhost:3000'],
+    credentials: true
+  })
+);
+// prevent CORS problems
+app.use(function(req, res, next) {
+  res.header('Content-Type', 'application/json;charset=UTF-8');
+  res.header(
+    'Access-Control-Allow-Origin',
+    `${process.env.CORS_ALLOWED_ORIGIN}`
+  );
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Response-Time, X-PINGOTHER, X-CSRF-Token,Authorization'
+  );
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT ,DELETE');
+  res.header('Access-Control-Allow-Credentials', true);
+  next();
+});
+// Allow backend to parse cookies to the frontend and req
+app.use(cookieParser());
+
+// allow cors options, no need to enable it for now
+// app.options('*', cors());
 
 // Middlewares
 if (process.env.NODE_ENV === 'development') {
@@ -46,8 +73,6 @@ app.use(
     whitelist: ['duration']
   })
 );
-
-app.use(express.json({ limit: '10kb' }));
 
 // Routes
 app.use('/api/v1/posts', postRouter);

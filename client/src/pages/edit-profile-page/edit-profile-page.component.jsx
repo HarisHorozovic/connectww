@@ -1,4 +1,8 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { isLoggedIn } from '../../redux/user/user.actions';
 
 import './edit-profile-page.styles.scss';
 
@@ -20,6 +24,12 @@ class EditProfilePage extends React.Component {
     this.state = {
       showSection: 'info'
     };
+  }
+
+  componentDidMount() {
+    if (!this.props.currentUser) {
+      this.props.isLoggedIn();
+    }
   }
 
   infoSection = () => {
@@ -71,30 +81,44 @@ class EditProfilePage extends React.Component {
     }
   };
   render() {
-    const renderItem = this.toRender();
-    return (
-      <div className='profile-page'>
-        {/* <!-- Edit Page main content--> */}
-        <div className='edit-page flex-wrap-container'>
-          {/* <!-- Left Sidebar --> */}
-          <SidebarLeft
-            location='editprofile'
-            infoSection={this.infoSection}
-            addExp={this.addExp}
-            addEdu={this.addEdu}
-            friendRequests={this.friendRequests}
-            friends={this.friends}
-            changeLoginCreds={this.changeLoginCreds}
-            deactivateAcc={this.deactivateAcc}
-          />
-          {/* <!-- Main container --> */}
-          <div className='main-content card flex-hor-center'>{renderItem}</div>
-        </div>
+    if (!this.props.currentUser) {
+      return <Redirect to='/' />;
+    } else {
+      const renderItem = this.toRender();
+      return (
+        <div className='profile-page'>
+          {/* <!-- Edit Page main content--> */}
+          <div className='edit-page flex-wrap-container'>
+            {/* <!-- Left Sidebar --> */}
+            <SidebarLeft
+              location='editprofile'
+              infoSection={this.infoSection}
+              addExp={this.addExp}
+              addEdu={this.addEdu}
+              friendRequests={this.friendRequests}
+              friends={this.friends}
+              changeLoginCreds={this.changeLoginCreds}
+              deactivateAcc={this.deactivateAcc}
+            />
+            {/* <!-- Main container --> */}
+            <div className='main-content card flex-hor-center'>
+              {renderItem}
+            </div>
+          </div>
 
-        <MessagingContainer />
-      </div>
-    );
+          <MessagingContainer />
+        </div>
+      );
+    }
   }
 }
 
-export default EditProfilePage;
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+const mapDispatchToProps = dispatch => ({
+  isLoggedIn: () => dispatch(isLoggedIn())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditProfilePage);

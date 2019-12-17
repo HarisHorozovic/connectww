@@ -1,9 +1,10 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import './landing-page.styles.scss';
+import { isLoggedIn } from '../../redux/user/user.actions';
 
-import { setCurrentUser } from '../../redux/user/user.actions';
+import './landing-page.styles.scss';
 
 // Components
 import Login from '../../components/login/login.component';
@@ -19,10 +20,9 @@ class LandingPage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.setCurrentUser({
-      _id: 'asdasdadasd',
-      name: 'sdmsdofsdmsdofasd'
-    });
+    if (!this.props.currentUser) {
+      this.props.isLoggedIn();
+    }
   }
 
   showLogin = () => {
@@ -33,37 +33,45 @@ class LandingPage extends React.Component {
     this.setState({ toHide: 'login' });
   };
   render() {
-    return (
-      <div className='landing-page flex-full-center'>
-        <div className='landing-container flex-hor-center'>
-          <div className='landing-header flex-hor-center'>
-            <p>Welcome to simple social network ConnectWW</p>
-            <div className='landing-btns'>
-              <span
-                className='btn btn-grey btn-landing'
-                onClick={this.showLogin}
-              >
-                Login
-              </span>
-              <span
-                className='btn btn-grey btn-landing'
-                onClick={this.showRegister}
-              >
-                Signup
-              </span>
+    if (this.props.currentUser) {
+      return <Redirect to='/feed' />;
+    } else {
+      return (
+        <div className='landing-page flex-full-center'>
+          <div className='landing-container flex-hor-center'>
+            <div className='landing-header flex-hor-center'>
+              <p>Welcome to simple social network ConnectWW</p>
+              <div className='landing-btns'>
+                <span
+                  className='btn btn-grey btn-landing'
+                  onClick={this.showLogin}
+                >
+                  Login
+                </span>
+                <span
+                  className='btn btn-grey btn-landing'
+                  onClick={this.showRegister}
+                >
+                  Signup
+                </span>
+              </div>
+            </div>
+            <div className='landing-content flex-hor-center'>
+              {this.state.toHide === 'register' ? <Login /> : <Register />}
             </div>
           </div>
-          <div className='landing-content flex-hor-center'>
-            {this.state.toHide === 'register' ? <Login /> : <Register />}
-          </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 
 const mapDispatchToProps = dispatch => ({
-  setCurrentUser: user => dispatch(setCurrentUser(user))
+  isLoggedIn: () => dispatch(isLoggedIn())
 });
 
-export default connect(null, mapDispatchToProps)(LandingPage);
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LandingPage);

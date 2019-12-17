@@ -1,7 +1,8 @@
 import React from 'react';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { setUser } from '../../redux/user/user.actions';
+import { isLoggedIn } from '../../redux/user/user.actions';
 
 import './homepage.styles.scss';
 
@@ -22,34 +23,41 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.setUser({
-      email: 'haris@email.ca',
-      password: 'test1234'
-    });
+    if (!this.props.currentUser) {
+      this.props.isLoggedIn();
+    }
   }
 
   toggleCreatePost = () => {
     this.setState({ hidden: !this.state.hidden });
   };
   render() {
-    return (
-      <div className='homepage'>
-        <div className='flex-wrap-container'>
-          <SidebarLeft location={'homepage'} />
-          <div className='main-content flex-hor-center'>
-            <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
-            <CreatePost hidden={this.state.hidden} />
-            <PostContainer />
+    if (!this.props.currentUser) {
+      return <Redirect to='/' />;
+    } else {
+      return (
+        <div className='homepage'>
+          <div className='flex-wrap-container'>
+            <SidebarLeft location={'homepage'} />
+            <div className='main-content flex-hor-center'>
+              <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
+              <CreatePost hidden={this.state.hidden} />
+              <PostContainer />
+            </div>
           </div>
+          <MessagingContainer />
         </div>
-        <MessagingContainer />
-      </div>
-    );
+      );
+    }
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  setUser: user => dispatch(setUser(user))
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
 });
 
-export default connect(null, mapDispatchToProps)(HomePage);
+const mapDispatchToProps = dispatch => ({
+  isLoggedIn: () => dispatch(isLoggedIn())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

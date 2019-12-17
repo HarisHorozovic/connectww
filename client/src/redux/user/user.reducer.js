@@ -2,7 +2,7 @@ import { UserActionTypes } from './user.types';
 
 const INITIAL_STATE = {
   currentUser: null,
-  loggedInUser: null
+  lookingAtUser: null
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -11,6 +11,11 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentUser: action.payload
+      };
+    case UserActionTypes.REMOVE_CURRENT_USER:
+      return {
+        ...state,
+        currentUser: null
       };
     default:
       return state;
