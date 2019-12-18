@@ -2,8 +2,6 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { isLoggedIn } from '../../redux/user/user.actions';
-
 import './edit-profile-page.styles.scss';
 
 // Components
@@ -24,12 +22,6 @@ class EditProfilePage extends React.Component {
     this.state = {
       showSection: 'info'
     };
-  }
-
-  componentDidMount() {
-    if (!this.props.currentUser) {
-      this.props.isLoggedIn();
-    }
   }
 
   infoSection = () => {
@@ -117,8 +109,4 @@ const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser
 });
 
-const mapDispatchToProps = dispatch => ({
-  isLoggedIn: () => dispatch(isLoggedIn())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditProfilePage);
+export default connect(mapStateToProps)(EditProfilePage);

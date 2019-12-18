@@ -2,8 +2,6 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { isLoggedIn } from '../../redux/user/user.actions';
-
 import './homepage.styles.scss';
 
 // Components
@@ -20,12 +18,6 @@ class HomePage extends React.Component {
     this.state = {
       hidden: true
     };
-  }
-
-  componentDidMount() {
-    if (!this.props.currentUser) {
-      this.props.isLoggedIn();
-    }
   }
 
   toggleCreatePost = () => {
@@ -56,8 +48,4 @@ const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser
 });
 
-const mapDispatchToProps = dispatch => ({
-  isLoggedIn: () => dispatch(isLoggedIn())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
+export default connect(mapStateToProps)(HomePage);

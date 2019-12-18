@@ -2,8 +2,6 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { isLoggedIn } from '../../redux/user/user.actions';
-
 import './messages-page.styles.scss';
 
 // Components
@@ -38,12 +36,6 @@ class MessagesPage extends React.Component {
         ]
       }
     };
-  }
-
-  componentDidMount() {
-    if (!this.props.currentUser) {
-      this.props.isLoggedIn();
-    }
   }
 
   render() {
@@ -84,8 +76,4 @@ const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser
 });
 
-const mapDispatchToProps = dispatch => ({
-  isLoggedIn: () => dispatch(isLoggedIn())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(MessagesPage);
+export default connect(mapStateToProps)(MessagesPage);

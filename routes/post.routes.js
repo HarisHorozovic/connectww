@@ -28,7 +28,7 @@ router
 // @method GET
 // @route /api/v1/posts/me
 // @desc Get all current users posts
-router.route('/me').get(postController.getUsersPosts);
+router.route('/user/:userId').get(postController.getUsersPosts);
 
 // @method GET
 // @route /api/v1/posts/:id

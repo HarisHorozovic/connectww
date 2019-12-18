@@ -33,6 +33,8 @@ class LandingPage extends React.Component {
     this.setState({ toHide: 'login' });
   };
   render() {
+    // Use the errors to change the frontend
+    console.log(this.props.userErrors);
     if (this.props.currentUser) {
       return <Redirect to='/feed' />;
     } else {
@@ -70,8 +72,9 @@ const mapDispatchToProps = dispatch => ({
   isLoggedIn: () => dispatch(isLoggedIn())
 });
 
-const mapStateToProps = ({ user: { currentUser } }) => ({
-  currentUser
+const mapStateToProps = ({ user: { currentUser, userErrors } }) => ({
+  currentUser,
+  userErrors
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LandingPage);

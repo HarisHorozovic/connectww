@@ -2,9 +2,12 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
+import { isLoggedIn } from './redux/user/user.actions';
+
 import './App.css';
 
 // Components
+import Spinner from './components/spinner/spinner.component';
 import Navbar from './components/navbar/navbar.component';
 import HomePage from './pages/homepage/homepage.component';
 import ProfilePage from './pages/profilepage/profile.component';
@@ -16,8 +19,15 @@ import GroupsPage from './pages/groups-page/groups-page.component';
 import MatchPage from './pages/match-page/match-page.component';
 
 class App extends React.Component {
+  componentDidMount() {
+    if (!this.props.currentUser) {
+      this.props.isLoggedIn();
+    }
+  }
+
   render() {
-    const { currentUser } = this.props;
+    const { currentUser, loading } = this.props;
+    const isLoading = !currentUser && loading === true ? true : false;
 
     return (
       <div>
@@ -27,15 +37,40 @@ class App extends React.Component {
             exact
             path='/'
             render={() =>
-              currentUser ? <Redirect to='/feed' /> : <LandingPage />
+              currentUser ? <Redirect to='/feed' /> : <Redirect to='/auth' />
             }
           />
-          <Route exact path='/feed' component={HomePage} />
-          <Route exact path='/profile' component={ProfilePage} />
-          <Route exact path='/profile/settings' component={EditProfilePage} />
-          <Route exact path='/profile/:userId' component={ProfilePage} />
-          <Route exact path='/users/search' component={SearchUsersPage} />
-          <Route exact path='/messaging' component={MessagesPage} />
+          <Route exact path='/auth' component={LandingPage} />
+          <Route
+            exact
+            path='/feed'
+            render={() => (isLoading ? <Spinner /> : <HomePage />)}
+          />
+          <Route
+            exact
+            path='/profile'
+            render={() => (isLoading ? <Spinner /> : <ProfilePage />)}
+          />
+          <Route
+            exact
+            path='/profile/settings'
+            render={() => (isLoading ? <Spinner /> : <EditProfilePage />)}
+          />
+          <Route
+            exact
+            path='/profile/:userId'
+            render={() => (isLoading ? <Spinner /> : <ProfilePage />)}
+          />
+          <Route
+            exact
+            path='/users/search'
+            render={() => (isLoading ? <Spinner /> : <SearchUsersPage />)}
+          />
+          <Route
+            exact
+            path='/messaging'
+            render={() => (isLoading ? <Spinner /> : <MessagesPage />)}
+          />
           <Route exact path='/groups' component={GroupsPage} />
           <Route exact path='/match' component={MatchPage} />
         </Switch>
@@ -44,8 +79,13 @@ class App extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user: { currentUser } }) => ({
-  currentUser
+const mapStateToProps = ({ user: { currentUser, loading } }) => ({
+  currentUser,
+  loading
 });
 
-export default connect(mapStateToProps)(App);
+const mapDispatchToProps = dispatch => ({
+  isLoggedIn: () => dispatch(isLoggedIn())
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

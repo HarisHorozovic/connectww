@@ -36,14 +36,24 @@ exports.getAllFriendsPosts = catchAsync(async (req, res, next) => {
 
   friends.map(friend => userFriends.push(friend.user));
 
-  const posts = await Post.find({ author: { $in: userFriends } });
+  const posts = await Post.find({ author: { $in: userFriends } }).sort({
+    createdAt: -1
+  });
 
-  res.send(posts);
+  if (!posts) return next(new AppError('No posts to show', 404));
+
+  res.status(200).json({
+    status: 'success',
+    posts
+  });
 });
 
 // Get all posts from current user
 exports.getUsersPosts = catchAsync(async (req, res, next) => {
-  const posts = await Post.find({ author: req.user._id });
+  const posts = await Post.find({ author: req.params.userId }).sort({
+    createdAt: -1
+  });
+  if (!posts) return next(new AppError('No posts to show', 404));
 
   res.status(200).json({
     status: 'success',
@@ -87,7 +97,7 @@ exports.deletePost = catchAsync(async (req, res, next) => {
 
   // Check to see if the user that is trying to update post is the one that has created the post
   if (!isCurrentUser(post.author._id, req.user._id))
-    return next(new AppError('Can not update other users posts', 400));
+    return next(new AppError('Can not delete other users posts', 400));
 
   if (await Post.findByIdAndDelete(req.params.id)) {
     res.status(204).json({

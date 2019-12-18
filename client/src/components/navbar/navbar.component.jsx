@@ -11,7 +11,7 @@ class Navbar extends React.Component {
     this.props.logOut();
   };
   render() {
-    const { firstName } = this.props.currentUser.data.user;
+    const { firstName, _id } = this.props.currentUser.data.user;
     return (
       <nav className='navbar'>
         <div className='logo-container'>
@@ -29,7 +29,10 @@ class Navbar extends React.Component {
           <Link to='/messaging' className='menu-item'>
             Messaging
           </Link>
-          <Link to='/profile' className='menu-item my-profile flex-row-end'>
+          <Link
+            to={`/profile/${_id}`}
+            className='menu-item my-profile flex-row-end'
+          >
             {/* <img src='img/user.png' alt='UserImg' /> */}
             <p>{firstName}'s Profile</p>
           </Link>
@@ -49,8 +52,9 @@ const mapDispatchToProps = dispatch => ({
   logOut: () => dispatch(logOut())
 });
 
-const mapStateToProps = ({ user: { currentUser } }) => ({
-  currentUser
+const mapStateToProps = ({ user: { currentUser, lookingAtUser } }) => ({
+  currentUser,
+  lookingAtUser
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Navbar);

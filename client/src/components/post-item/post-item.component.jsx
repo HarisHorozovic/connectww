@@ -1,7 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import './post-item.styles.scss';
+
+import { removePost } from '../../redux/posts/posts.actions';
 
 //Components
 import CommentsContainer from '../comments-container/comments-container.component';
@@ -32,21 +35,42 @@ class PostItem extends React.Component {
     //Get user data as soon as component mounts and store it in the state
     // getUserData(this.props.user);
   }
+
+  removePost = postId => {
+    this.props.removePost(postId);
+  };
+
   render() {
-    const { postId, img, text, createdAt, likes, dislikes, user } = this.props;
-    const { userName, hidden, userImg } = this.state;
+    const {
+      postId,
+      img,
+      text,
+      createdAt,
+      likes,
+      dislikes,
+      author
+    } = this.props;
+    const { hidden, userImg } = this.state;
+
     return (
       <div className='card post-item'>
         <div className='flex-full-center post-item-header'>
           <div className='user-meta flex-row-end'>
             <img src={userImg} alt='userImg' />
             <div className='text-info'>
-              <Link to={`/profile/${user}`}>{userName}</Link>
+              <Link to={`/profile/${author._id}`}>{author.firstName}</Link>
               <p className='lead'>{createdAt}</p>
             </div>
           </div>
+          {this.props.currentUser.data.user._id === author._id ? (
+            <button
+              className='btn btn-red flex-row-end'
+              onClick={() => this.removePost(postId)}
+            >
+              &#x2612;
+            </button>
+          ) : null}
         </div>
-        {/* <!-- Post content --> */}
         <div className='post-content flex-hor-center'>
           {img === null ? (
             <p className='post-text'>{text}</p>
@@ -73,13 +97,18 @@ class PostItem extends React.Component {
             </div>
           </div>
         </div>
-        {/* <!-- Post content -->*/}
-        {/* <!-- Comments --> */}
         <CommentsContainer postId={postId} hidden={hidden} />
-        {/* <!-- Comments --> */}
       </div>
     );
   }
 }
 
-export default PostItem;
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+const mapDispatchToProps = dispatch => ({
+  removePost: postId => dispatch(removePost(postId))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostItem);

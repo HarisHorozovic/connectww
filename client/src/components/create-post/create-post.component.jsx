@@ -1,6 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './create-post.styles.scss';
+
+import { createPost } from '../../redux/posts/posts.actions';
 
 class CreatePost extends React.Component {
   constructor() {
@@ -17,8 +20,12 @@ class CreatePost extends React.Component {
   };
 
   createPost = () => {
-    console.log(this.state.postText);
-    this.setState({ postText: '' });
+    const postObj = {
+      text: this.state.postText,
+      postImg: this.state.imageToUpload
+    };
+    this.setState({ postText: '', postImg: null });
+    this.props.createPost(postObj);
   };
   render() {
     const { hidden } = this.props;
@@ -49,4 +56,8 @@ class CreatePost extends React.Component {
   }
 }
 
-export default CreatePost;
+const mapDispatchToProps = dispatch => ({
+  createPost: post => dispatch(createPost(post))
+});
+
+export default connect(null, mapDispatchToProps)(CreatePost);

@@ -1,0 +1,46 @@
+import { PostActionTypes } from './posts.types';
+
+const INITIAL_STATE = {
+  posts: null,
+  post: null,
+  postError: null,
+  postLoading: true
+};
+
+const postsReducer = (state = INITIAL_STATE, action) => {
+  switch (action.type) {
+    case PostActionTypes.SET_POST:
+      return {
+        ...state,
+        post: action.payload,
+        postError: null,
+        postLoading: false
+      };
+    case PostActionTypes.GET_POSTS_FROM_FRIENDS:
+    case PostActionTypes.GET_USERS_POSTS:
+      return {
+        ...state,
+        posts: action.payload.posts,
+        postLoading: false,
+        postError: null
+      };
+    case PostActionTypes.REMOVE_POST:
+      console.log(state.posts);
+      return {
+        ...state,
+        posts: state.posts.filter(post => {
+          return post._id !== action.payload;
+        })
+      };
+    case PostActionTypes.POSTS_ERROR:
+      return {
+        ...state,
+        postError: action.payload,
+        postLoading: false
+      };
+    default:
+      return state;
+  }
+};
+
+export default postsReducer;

@@ -1,8 +1,6 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-
-import { isLoggedIn } from '../../redux/user/user.actions';
 
 import './profile.styles.scss';
 
@@ -26,12 +24,6 @@ class ProfilePage extends React.Component {
     };
   }
 
-  componentDidMount() {
-    if (!this.props.currentUser) {
-      this.props.isLoggedIn();
-    }
-  }
-
   toggleCreatePost = () => {
     this.setState({ hidden: !this.state.hidden });
   };
@@ -52,7 +44,7 @@ class ProfilePage extends React.Component {
     if (!this.props.currentUser) {
       return <Redirect to='/' />;
     } else {
-      const userId = this.props.match.params.userId;
+      const { userId } = this.props.match.params;
 
       const posts = (
         <div className='full-width flex-hor-center'>
@@ -129,8 +121,4 @@ const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser
 });
 
-const mapDispatchToProps = dispatch => ({
-  isLoggedIn: () => dispatch(isLoggedIn())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProfilePage);
+export default withRouter(connect(mapStateToProps)(ProfilePage));

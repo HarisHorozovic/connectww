@@ -2,8 +2,6 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { isLoggedIn } from '../../redux/user/user.actions';
-
 import './search-users-page.styles.scss';
 
 // Components
@@ -40,12 +38,6 @@ class SearchUsersPage extends React.Component {
         }
       ]
     };
-  }
-
-  componentDidMount() {
-    if (!this.props.currentUser) {
-      this.props.isLoggedIn();
-    }
   }
 
   handleChange = e => {
@@ -98,8 +90,4 @@ const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser
 });
 
-const mapDispatchToProps = dispatch => ({
-  isLoggedIn: () => dispatch(isLoggedIn())
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SearchUsersPage);
+export default connect(mapStateToProps)(SearchUsersPage);
