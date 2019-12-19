@@ -4,7 +4,11 @@ import { connect } from 'react-redux';
 
 import './post-item.styles.scss';
 
-import { removePost } from '../../redux/posts/posts.actions';
+import {
+  removePost,
+  likePost,
+  dislikePost
+} from '../../redux/posts/posts.actions';
 
 //Components
 import CommentsContainer from '../comments-container/comments-container.component';
@@ -14,7 +18,6 @@ class PostItem extends React.Component {
     super();
 
     this.state = {
-      userName: 'Haris',
       userImg: '',
       hidden: true
     };
@@ -24,17 +27,13 @@ class PostItem extends React.Component {
     this.setState({ hidden: !this.state.hidden });
   };
 
-  getUserData = userId => {
-    //Get the user data using userId
-
-    //Set the state to userId
-    this.setState({ userName: 'Mike', age: 25, userImg: '123' });
+  handleLike = postId => {
+    this.props.likePost(postId);
   };
 
-  componentDidMount() {
-    //Get user data as soon as component mounts and store it in the state
-    // getUserData(this.props.user);
-  }
+  handleDislike = postId => {
+    this.props.dislikePost(postId);
+  };
 
   removePost = postId => {
     this.props.removePost(postId);
@@ -82,11 +81,17 @@ class PostItem extends React.Component {
           )}
 
           <div className='btn-container flex-full-center'>
-            <div className='btn btn-transparent post-btn'>
+            <div
+              className='btn btn-transparent post-btn'
+              onClick={() => this.handleLike(postId)}
+            >
               &#x2764;
               <span>{likes ? likes.length : 0}</span>
             </div>
-            <div className='btn btn-transparent post-btn'>
+            <div
+              className='btn btn-transparent post-btn'
+              onClick={() => this.handleDislike(postId)}
+            >
               &#x2661; <span>{dislikes ? dislikes.length : 0}</span>
             </div>
             <div
@@ -108,7 +113,9 @@ const mapStateToProps = ({ user: { currentUser } }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  removePost: postId => dispatch(removePost(postId))
+  removePost: postId => dispatch(removePost(postId)),
+  likePost: postId => dispatch(likePost(postId)),
+  dislikePost: postId => dispatch(dislikePost(postId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostItem);

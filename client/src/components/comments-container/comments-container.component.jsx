@@ -1,4 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import {
+  createComment,
+  getAllCommentsForPost
+} from '../../redux/comments/comments.actions';
 
 import './comments-container.styles.scss';
 
@@ -11,21 +17,7 @@ class CommentsContainer extends React.Component {
     super();
 
     this.state = {
-      comments: [
-        {
-          _id: 'commentId',
-          user: 'ObjectId User1',
-          text: 'post text',
-          createdAt: 'created comment'
-        },
-        {
-          _id: 'commentId',
-          user: 'ObjectId User',
-          text: 'comment goes here',
-          createdAt: 'created comment'
-        }
-      ],
-      commentText: ''
+      text: ''
     };
   }
 
@@ -35,7 +27,7 @@ class CommentsContainer extends React.Component {
   };
 
   componentDidMount() {
-    // fetchComments(this.props.postId);
+    this.props.getAllCommentsForPost(this.props.postId);
   }
 
   handleChange = e => {
@@ -43,41 +35,60 @@ class CommentsContainer extends React.Component {
   };
 
   postComment = () => {
-    console.log(this.state.commentText);
-    this.setState({ commentText: '' });
+    const { text } = this.state;
+    this.props.createComment(this.props.postId, text);
+    this.setState({ text: '' });
   };
 
   render() {
-    const { hidden } = this.props;
+    const { hidden, comments, postId } = this.props;
     return (
       <div
         className={`comment-container flex-hor-center ${
           hidden ? 'hidden' : ''
         }`}
       >
-        {this.state.comments.map(comment => (
-          <CommentItem
-            key={comment.user}
-            user={comment.user}
-            text={comment.text}
-            createdAt={comment.createdAt}
-          />
-        ))}
         <div className='create-comment flex-wrap-center'>
           <FormInput
             type='text'
-            name='commentText'
+            name='text'
             placeholder='Say something...'
-            value={this.state.commentText}
+            value={this.state.text}
             handleChange={this.handleChange}
           />
           <button className='btn btn-transparent' onClick={this.postComment}>
             &#x27A4;
           </button>
         </div>
+        {comments
+          ? comments.map(comment => {
+              return comment.post === postId ? (
+                <CommentItem
+                  key={comment._id}
+                  text={comment.text}
+                  commentId={comment._id}
+                  userName={comment.author.firstName}
+                  postId={postId}
+                  authorId={comment.author._id}
+                  createdAt={comment.createdAt}
+                  userImg={comment.userImg}
+                />
+              ) : null;
+            })
+          : null}
       </div>
     );
   }
 }
 
-export default CommentsContainer;
+const mapStateToProps = ({ comments: { comments } }) => ({
+  comments
+});
+
+const mapDispatchToProps = dispatch => ({
+  createComment: (postId, commentBody) =>
+    dispatch(createComment(postId, commentBody)),
+  getAllCommentsForPost: postId => dispatch(getAllCommentsForPost(postId))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CommentsContainer);

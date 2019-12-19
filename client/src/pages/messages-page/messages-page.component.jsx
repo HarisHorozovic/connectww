@@ -46,8 +46,7 @@ class MessagesPage extends React.Component {
       return (
         <div className='messages-page'>
           <div className='messages-page-container flex-wrap-container'>
-            <SidebarLeft location='messagespage' />
-
+            <SidebarLeft />
             <div className='main-content flex-hor-center'>
               <div className='mp-container flex-hor-center'>
                 {messageSession.messages.map(message => (

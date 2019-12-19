@@ -83,7 +83,6 @@ class EditProfilePage extends React.Component {
           <div className='edit-page flex-wrap-container'>
             {/* <!-- Left Sidebar --> */}
             <SidebarLeft
-              location='editprofile'
               infoSection={this.infoSection}
               addExp={this.addExp}
               addEdu={this.addEdu}

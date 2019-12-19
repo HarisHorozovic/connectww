@@ -37,7 +37,6 @@ class EditFriendsContainer extends React.Component {
     const { friends } = this.state;
     return (
       <div className='friends-container flex-hor-center'>
-        {/* <!-- Friends Item --> */}
         {friends.map(friend => (
           <FriendListItem
             key={friend._id}

@@ -53,7 +53,7 @@ class App extends React.Component {
           />
           <Route
             exact
-            path='/profile/settings'
+            path='/profile/:userId/settings'
             render={() => (isLoading ? <Spinner /> : <EditProfilePage />)}
           />
           <Route

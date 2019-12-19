@@ -4,6 +4,14 @@
   height: 100vh;
   overflow-y: scroll;
   overflow-x: hidden;
+
+  .flex-wrap-container {
+    width: 80vw;
+
+    .main-content {
+      width: 100%;
+    }
+  }
 }
 
 .main-content {

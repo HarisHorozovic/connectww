@@ -24,7 +24,9 @@ exports.createComment = catchAsync(async (req, res, next) => {
 
 // Get all comments for single post
 exports.getComments = catchAsync(async (req, res, next) => {
-  const comments = await Comment.find({ post: req.params.id });
+  const comments = await Comment.find({ post: req.params.id }).sort({
+    createdAt: -1
+  });
 
   if (!comments) return next(new AppError('No comments for this post', 404));
 

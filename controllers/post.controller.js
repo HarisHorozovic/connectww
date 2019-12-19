@@ -128,7 +128,8 @@ exports.likePost = catchAsync(async (req, res, next) => {
     if (await post.save({ validateBeforeSave: false })) {
       return res.status(200).json({
         status: 'success',
-        message: 'Like removed succesfully'
+        message: 'Like removed succesfully',
+        post
       });
     }
 
@@ -167,7 +168,8 @@ exports.dislikePost = catchAsync(async (req, res, next) => {
     if (await post.save({ validateBeforeSave: false })) {
       return res.status(200).json({
         status: 'success',
-        message: 'Dislike removed succesfully'
+        message: 'Dislike removed succesfully',
+        post
       });
     }
 

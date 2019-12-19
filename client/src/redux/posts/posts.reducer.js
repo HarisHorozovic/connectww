@@ -2,14 +2,13 @@ import { PostActionTypes } from './posts.types';
 
 const INITIAL_STATE = {
   posts: null,
-  post: null,
   postError: null,
   postLoading: true
 };
 
 const postsReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case PostActionTypes.SET_POST:
+    case PostActionTypes.GET_CURRENT_POST:
       return {
         ...state,
         post: action.payload,
@@ -25,13 +24,18 @@ const postsReducer = (state = INITIAL_STATE, action) => {
         postError: null
       };
     case PostActionTypes.REMOVE_POST:
-      console.log(state.posts);
       return {
         ...state,
         posts: state.posts.filter(post => {
           return post._id !== action.payload;
         })
       };
+    case PostActionTypes.LIKE_POST:
+    case PostActionTypes.DISLIKE_POST:
+      return {
+        ...state
+      };
+
     case PostActionTypes.POSTS_ERROR:
       return {
         ...state,
