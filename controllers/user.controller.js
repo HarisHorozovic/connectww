@@ -245,7 +245,7 @@ exports.addExperience = catchAsync(async (req, res, next) => {
 // Edit experience
 exports.updateExperience = catchAsync(async (req, res, next) => {
   await User.findOneAndUpdate(
-    { _id: req.user._id, 'experience._id': req.params.id },
+    { _id: req.user._id, 'experience._id': req.params.experienceId },
     {
       $set: {
         'experience.$.company': req.body.company,
@@ -268,7 +268,7 @@ exports.removeExperience = catchAsync(async (req, res, next) => {
   const { experience } = req.user;
 
   const index = experience.findIndex(
-    el => el._id.toString() === req.params.id.toString()
+    el => el._id.toString() === req.params.experienceId.toString()
   );
 
   // If there is friend request in database remove it
@@ -298,7 +298,6 @@ exports.addEducation = catchAsync(async (req, res, next) => {
   await req.user.updateOne({
     $push: { education: newEdu }
   });
-
   res.status(200).json({
     status: 'success',
     education: newEdu
@@ -307,7 +306,7 @@ exports.addEducation = catchAsync(async (req, res, next) => {
 // Edit Education
 exports.updateEducation = catchAsync(async (req, res, next) => {
   await User.findOneAndUpdate(
-    { _id: req.user._id, 'education._id': req.params.id },
+    { _id: req.user._id, 'education._id': req.params.educationId },
     {
       $set: {
         'education.$.school': req.body.school,
@@ -332,7 +331,7 @@ exports.removeEducation = catchAsync(async (req, res, next) => {
   const { education } = req.user;
 
   const index = education.findIndex(
-    el => el._id.toString() === req.params.id.toString()
+    el => el._id.toString() === req.params.educationId.toString()
   );
 
   // If there is friend request in database remove it

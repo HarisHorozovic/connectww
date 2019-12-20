@@ -1,5 +1,5 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './edit-profile-page.styles.scss';
@@ -76,6 +76,10 @@ class EditProfilePage extends React.Component {
     if (!this.props.currentUser) {
       return <Redirect to='/' />;
     } else {
+      // Restrict access to settings page while visiting profile that is not your own
+      if (this.props.match.params.userId !== this.props.currentUser._id) {
+        return <Redirect to={`/profile/${this.props.match.params.userId}`} />;
+      }
       const renderItem = this.toRender();
       return (
         <div className='profile-page'>
@@ -108,4 +112,4 @@ const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser
 });
 
-export default connect(mapStateToProps)(EditProfilePage);
+export default withRouter(connect(mapStateToProps)(EditProfilePage));

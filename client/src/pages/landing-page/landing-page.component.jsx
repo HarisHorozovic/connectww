@@ -34,7 +34,6 @@ class LandingPage extends React.Component {
   };
   render() {
     // Use the errors to change the frontend
-    console.log(this.props.userErrors);
     if (this.props.currentUser) {
       return <Redirect to='/feed' />;
     } else {

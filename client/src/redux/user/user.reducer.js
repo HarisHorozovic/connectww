@@ -16,6 +16,14 @@ const userReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         userErrors: null
       };
+    case UserActionTypes.GET_SINGLE_USER: {
+      return {
+        ...state,
+        lookingAtUser: action.payload,
+        loading: false,
+        userErrors: null
+      };
+    }
     case UserActionTypes.REMOVE_CURRENT_USER:
       return {
         ...state,
@@ -23,6 +31,32 @@ const userReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         userErrors: null
       };
+    case UserActionTypes.ADD_EDUCATION:
+      return {
+        ...state,
+        loading: false,
+        userErrors: null
+      };
+    case UserActionTypes.REMOVE_EDUCATION:
+      return {
+        ...state,
+        loading: false,
+        userErrors: null
+      };
+
+    case UserActionTypes.ADD_EXPERIENCE:
+      return {
+        ...state,
+        loading: false,
+        userErrors: null
+      };
+    case UserActionTypes.REMOVE_EXPERIENCE:
+      return {
+        ...state,
+        loading: false,
+        userErrors: null
+      };
+
     case UserActionTypes.SET_USER_ERROR:
       return {
         ...state,

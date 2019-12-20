@@ -1,17 +1,18 @@
 import { PostActionTypes } from './posts.types';
 
 const INITIAL_STATE = {
-  posts: null,
+  posts: [],
   postError: null,
   postLoading: true
 };
 
 const postsReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case PostActionTypes.GET_CURRENT_POST:
+    case PostActionTypes.SET_POST:
       return {
         ...state,
         post: action.payload,
+        posts: state.posts.concat(action.payload),
         postError: null,
         postLoading: false
       };

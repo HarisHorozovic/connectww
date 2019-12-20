@@ -25,7 +25,7 @@ class CommentItem extends React.Component {
           <p className='lead'>{createdAt}</p>
           <Link to={`/profile/${authorId}`}>{userName}</Link>
 
-          {currentUser.data.user._id === authorId ? (
+          {currentUser._id === authorId ? (
             <button
               className='btn btn-red flex-row-end'
               onClick={() => this.props.deleteComment(postId, commentId)}

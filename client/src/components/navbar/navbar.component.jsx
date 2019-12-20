@@ -11,7 +11,7 @@ class Navbar extends React.Component {
     this.props.logOut();
   };
   render() {
-    const { firstName, _id } = this.props.currentUser.data.user;
+    const { firstName, _id } = this.props.currentUser;
     return (
       <nav className='navbar'>
         <div className='logo-container'>

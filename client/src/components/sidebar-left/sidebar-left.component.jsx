@@ -23,7 +23,7 @@ class SidebarLeft extends React.Component {
         </Link>
         {currentUser ? (
           <Link
-            to={`/profile/${currentUser.data.user._id}/settings`}
+            to={`/profile/${currentUser._id}/settings`}
             className='btn btn-grey'
           >
             {' '}
@@ -71,7 +71,6 @@ class SidebarLeft extends React.Component {
     );
 
     const urlPath = this.props.match.path.split('/');
-    console.log('contains', urlPath.includes('settings'));
 
     return (
       <div className='sidebar-left content-container flex-hor-center'>
@@ -81,7 +80,7 @@ class SidebarLeft extends React.Component {
         </div>
         {!currentUser ? (
           <Redirect to='/' />
-        ) : this.props.match.params.userId === currentUser.data.user._id ? (
+        ) : this.props.match.params.userId === currentUser._id ? (
           userOwnProfile
         ) : (
           userOtherProfile

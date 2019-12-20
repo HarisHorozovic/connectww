@@ -16,7 +16,7 @@ class CreatePost extends React.Component {
   }
 
   handleChange = e => {
-    this.setState({ postText: e.target.value });
+    this.setState({ [e.target.name]: e.target.value });
   };
 
   createPost = () => {
@@ -24,6 +24,7 @@ class CreatePost extends React.Component {
       text: this.state.postText,
       postImg: this.state.imageToUpload
     };
+    console.log(this.state);
     this.setState({ postText: '', postImg: null });
     this.props.createPost(postObj);
   };
@@ -35,6 +36,7 @@ class CreatePost extends React.Component {
           <textarea
             rows='10'
             placeholder='Say something...'
+            name='postText'
             onChange={this.handleChange}
             value={this.state.postText}
           ></textarea>

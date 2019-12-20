@@ -134,6 +134,7 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // Put user in the request
   req.user = freshUser;
+
   next();
 });
 

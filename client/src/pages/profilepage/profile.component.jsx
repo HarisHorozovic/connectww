@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import './profile.styles.scss';
 
+import { getUser } from '../../redux/user/user.actions';
+
 // Components
 import PostContainer from '../../components/post-container/post-container.component';
 import SidebarLeft from '../../components/sidebar-left/sidebar-left.component';
@@ -22,6 +24,10 @@ class ProfilePage extends React.Component {
       hidden: true,
       showSection: 'feed'
     };
+  }
+
+  componentDidMount() {
+    this.props.getUser(this.props.match.params.userId);
   }
 
   toggleCreatePost = () => {
@@ -48,12 +54,12 @@ class ProfilePage extends React.Component {
 
       const posts = (
         <div className='full-width flex-hor-center'>
-          {userId !== undefined ? null : (
+          {userId === this.props.currentUser._id ? (
             <div className='full-width flex-hor-center'>
               <CreatePostToggle toggleCreatePost={this.toggleCreatePost} />
               <CreatePost hidden={this.state.hidden} />
             </div>
-          )}
+          ) : null}
 
           <PostContainer />
         </div>
@@ -117,8 +123,15 @@ class ProfilePage extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user: { currentUser } }) => ({
-  currentUser
+const mapDispatchToProps = dispatch => ({
+  getUser: userId => dispatch(getUser(userId))
 });
 
-export default withRouter(connect(mapStateToProps)(ProfilePage));
+const mapStateToProps = ({ user: { currentUser, lookingAtUser } }) => ({
+  currentUser,
+  lookingAtUser
+});
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ProfilePage)
+);

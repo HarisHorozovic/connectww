@@ -26,11 +26,12 @@ const userSchema = mongoose.Schema({
       message: 'Passwords do not match'
     }
   },
+  location: { type: String },
   passwordChangedAt: Date,
   DOB: { type: Date },
   createdAt: { type: Date, default: Date().toString() },
   gender: { type: String, required: [true, 'You must select your gender'] },
-  relationship: { type: String, enum: ['male', 'female'] },
+  relationship: { type: String },
   bio: { type: String },
   friends: [
     {
@@ -46,23 +47,32 @@ const userSchema = mongoose.Schema({
   ],
   experience: [
     {
-      company: { type: String },
-      position: { type: String },
-      from: { type: Date },
+      company: {
+        type: String,
+        required: [true, 'You must enter company name']
+      },
+      position: {
+        type: String,
+        required: [true, 'You must enter position name']
+      },
+      from: { type: Date, required: [true, 'You must enter start date'] },
       to: { type: Date },
       current: { type: Boolean, default: false },
-      desc: { type: String }
+      desc: { type: String, required: [true, 'You must enter description'] }
     }
   ],
   education: [
     {
-      school: { type: String },
-      degree: { type: String },
-      studied: { type: String },
-      from: { type: Date },
+      school: { type: String, required: [true, 'You must enter school name'] },
+      degree: { type: String, required: [true, 'You must enter degree'] },
+      studied: {
+        type: String,
+        required: [true, 'You must enter what you studied']
+      },
+      from: { type: Date, required: [true, 'You must enter start date'] },
       to: { type: Date },
       current: { type: Boolean, default: false },
-      desc: { type: String }
+      desc: { type: String, required: [true, 'You must enter description'] }
     }
   ],
   passwordResetToken: String,
@@ -73,8 +83,6 @@ const userSchema = mongoose.Schema({
     select: false
   }
 });
-
-userSchema.index({ location: '2dsphere' });
 
 // Virtual populate, how we connect children to the parent that the children are referencing
 userSchema.virtual('posts', {

@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { addEducation } from '../../redux/user/user.actions';
 
 import './add-education.styles.scss';
 
@@ -25,8 +28,23 @@ class AddEducation extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-
-    console.log(this.state);
+    const eduObj = {
+      school: this.state.school,
+      degree: this.state.degree,
+      studied: this.state.studied,
+      from: this.state.from,
+      to: this.state.to,
+      desc: this.state.desc
+    };
+    this.props.addEducation(eduObj);
+    this.setState({
+      school: '',
+      degree: '',
+      studied: '',
+      from: '',
+      to: '',
+      desc: ''
+    });
   };
 
   render() {
@@ -88,4 +106,8 @@ class AddEducation extends React.Component {
   }
 }
 
-export default AddEducation;
+const mapDispatchToProps = dispatch => ({
+  addEducation: eduObj => dispatch(addEducation(eduObj))
+});
+
+export default connect(null, mapDispatchToProps)(AddEducation);

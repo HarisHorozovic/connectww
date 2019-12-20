@@ -91,7 +91,7 @@ router
 // @method POST
 // @route /api/v1/users/education
 // @desc Add users education
-router.route('/education').post(userController.addEducation);
+router.route('/education/add').post(userController.addEducation);
 
 // @method PATCH
 // @route /api/v1/users/education/:id
@@ -101,14 +101,14 @@ router.route('/education').post(userController.addEducation);
 // @route /api/v1/users/education/:id
 // @desc Delete selected education
 router
-  .route('/education/:id')
+  .route('/education/:educationId')
   .patch(userController.updateEducation)
   .delete(userController.removeEducation);
 
 // @method POST
 // @route /api/v1/users/experience
 // @desc Add work experience for the user
-router.route('/experience').post(userController.addExperience);
+router.route('/experience/add').post(userController.addExperience);
 
 // @method PATCH
 // @route /api/v1/users/experience/:id
@@ -118,7 +118,7 @@ router.route('/experience').post(userController.addExperience);
 // @route /api/v1/users/experience/:id
 // @desc Delete Selected Experience
 router
-  .route('/experience/:id')
+  .route('/experience/:experienceId')
   .patch(userController.updateExperience)
   .delete(userController.removeExperience);
 

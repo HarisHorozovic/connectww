@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { addExperience } from '../../redux/user/user.actions';
 
 import './add-experience.styles.scss';
 
@@ -24,8 +27,16 @@ class AddExperience extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    const expObj = {
+      company: this.state.company,
+      position: this.state.position,
+      from: this.state.from,
+      to: this.state.to,
+      desc: this.state.desc
+    };
 
-    console.log(this.state);
+    this.props.addExperience(expObj);
+    this.setState({ company: '', position: '', from: '', to: '', desc: '' });
   };
 
   render() {
@@ -78,4 +89,12 @@ class AddExperience extends React.Component {
   }
 }
 
-export default AddExperience;
+const mapDispatchToProps = dispatch => ({
+  addExperience: expObj => dispatch(addExperience(expObj))
+});
+
+const mapStateToProps = ({ user: { lookingAtUser } }) => ({
+  lookingAtUser
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddExperience);

@@ -61,7 +61,7 @@ class PostItem extends React.Component {
               <p className='lead'>{createdAt}</p>
             </div>
           </div>
-          {this.props.currentUser.data.user._id === author._id ? (
+          {this.props.currentUser._id === author._id ? (
             <button
               className='btn btn-red flex-row-end'
               onClick={() => this.removePost(postId)}

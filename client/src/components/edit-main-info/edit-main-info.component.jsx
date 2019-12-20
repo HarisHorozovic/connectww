@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { updateUser } from '../../redux/user/user.actions';
 
 import './edit-main-info.styles.scss';
 
@@ -12,11 +15,22 @@ class EditMainInfo extends React.Component {
     this.state = {
       firstName: '',
       lastName: '',
-      dob: '',
+      DOB: '',
       location: '',
       gender: '',
       relationship: ''
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      firstName: this.props.currentUser.firstName,
+      lastName: this.props.currentUser.lastName,
+      DOB: this.props.currentUser.DOB,
+      location: this.props.currentUser.location,
+      gender: this.props.currentUser.gender,
+      relationship: this.props.currentUser.relationship
+    });
   }
 
   handleChange = e => {
@@ -25,8 +39,10 @@ class EditMainInfo extends React.Component {
 
   editMainInfo = e => {
     e.preventDefault();
+    const userObj = this.state;
 
-    console.log(this.state);
+    this.props.updateUser(userObj);
+    console.log(userObj);
   };
 
   render() {
@@ -53,8 +69,8 @@ class EditMainInfo extends React.Component {
           />
           <FormInput
             type='date'
-            name='dob'
-            value={this.state.dob}
+            name='DOB'
+            value={this.state.DOB}
             handleChange={this.handleChange}
             label='Date of Birth'
           />
@@ -101,4 +117,12 @@ class EditMainInfo extends React.Component {
   }
 }
 
-export default EditMainInfo;
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+const mapDispatchToProps = dispatch => ({
+  updateUser: userBody => dispatch(updateUser(userBody))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditMainInfo);

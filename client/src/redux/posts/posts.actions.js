@@ -8,7 +8,7 @@ const apiUrl = 'http://localhost:5000/api/v1/posts';
 export const createPost = post => dispatch => {
   return axios
     .post(`${apiUrl}/`, post, { withCredentials: true })
-    .then(res => dispatch(setPost(res.data)))
+    .then(res => dispatch(setPost(res.data.post)))
     .catch(err => dispatch(setPostError(err.response.data)));
 };
 
