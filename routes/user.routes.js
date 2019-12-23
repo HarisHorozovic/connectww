@@ -76,15 +76,17 @@ router
   .get(userController.getUser)
   .post(userController.addFriend);
 
-// @method PATCH
-// @route /api/v1/users/update-password
-// @desc Update password for the currently logged in user
+router.route('/friends/:friendId').delete(userController.removeFriend);
 
-// @method PATCH
-// @route /api/v1/users/update-password
-// @desc Update password for the currently logged in user
+// @method POST
+// @route /api/v1/users/friends/requests
+// @desc Accept friend request
+
+// @method DELETE
+// @route /api/v1/users/friends/requests
+// @desc Decline friend request
 router
-  .route('/friend-requests')
+  .route('/requests/:friendId')
   .post(userController.acceptFriendRequest)
   .delete(userController.declineFriendRequest);
 

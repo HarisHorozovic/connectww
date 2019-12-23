@@ -40,6 +40,13 @@ export const getUser = userId => dispatch => {
     .catch(err => dispatch(setUserErrors(err.response.data)));
 };
 
+export const getAllUsers = userId => dispatch => {
+  return axios
+    .get(`${apiUrl}/all`, { withCredentials: true })
+    .then(res => dispatch(getAll(res.data.data.users)))
+    .catch(err => dispatch(setUserErrors(err.response.data)));
+};
+
 export const updateUser = updateBody => dispatch => {
   return axios
     .patch(`${apiUrl}/update-user-data`, updateBody, { withCredentials: true })
@@ -50,10 +57,7 @@ export const updateUser = updateBody => dispatch => {
 export const addEducation = eduObj => dispatch => {
   axios
     .post(`${apiUrl}/education/add`, eduObj, { withCredentials: true })
-    .then(res => {
-      console.log(res.data.education);
-      dispatch(eduAdd(res.data.education));
-    })
+    .then(res => dispatch(eduAdd(res.data.education)))
     .catch(err => dispatch(setUserErrors(err.response.data)));
 };
 
@@ -78,10 +82,51 @@ export const removeExperience = expId => dispatch => {
     .catch(err => dispatch(setUserErrors(err.response.data)));
 };
 
+export const sendFriendRequest = newFriendId => dispatch => {
+  axios
+    .post(`${apiUrl}/${newFriendId}`, {}, { withCredentials: true })
+    .then(res => dispatch(addFriend(res.data.newFriend)))
+    .catch(err => dispatch(setUserErrors(err.response.data)));
+};
+
+export const removeFriend = friendId => dispatch => {
+  axios
+    .delete(`${apiUrl}/friends/${friendId}`, { withCredentials: true })
+    .then(res => dispatch(setCurrentUser(res.data.data.user)))
+    .catch(err => dispatch(setUserErrors(err.response.data)));
+};
+
+export const acceptFriendRequest = friendId => dispatch => {
+  return axios
+    .post(
+      `${apiUrl}/requests/${friendId}`,
+      {},
+      {
+        withCredentials: true
+      }
+    )
+    .then(res => dispatch(setCurrentUser(res.data.data.user)))
+    .catch(err => dispatch(setUserErrors(err.response.data)));
+};
+
+export const declineFriendRequest = friendId => dispatch => {
+  return axios
+    .delete(`${apiUrl}/requests/${friendId}`, { withCredentials: true })
+    .then(res => dispatch(setCurrentUser(res.data.data.user)))
+    .catch(err => dispatch(setUserErrors(err.response.data)));
+};
+
 // Pure functions for handling redux state
 export const setCurrentUser = data => {
   return {
     type: UserActionTypes.SET_CURRENT_USER,
+    payload: data
+  };
+};
+
+export const getAll = data => {
+  return {
+    type: UserActionTypes.GET_ALL_USERS,
     payload: data
   };
 };
@@ -123,6 +168,13 @@ export const expAdd = data => {
 export const expRemove = data => {
   return {
     type: UserActionTypes.REMOVE_EXPERIENCE,
+    payload: data
+  };
+};
+
+export const addFriend = data => {
+  return {
+    type: UserActionTypes.ADD_FRIEND,
     payload: data
   };
 };

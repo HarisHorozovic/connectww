@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import './search-users-page.styles.scss';
 
+import { sendFriendRequest, getAllUsers } from '../../redux/user/user.actions';
+
 // Components
 import FormInput from '../../components/form-input/form-input.component';
 import MessagingContainer from '../../components/messaging/messaging.component';
@@ -15,38 +17,27 @@ class SearchUsersPage extends React.Component {
 
     this.state = {
       search: '',
-      matchingUsers: [
-        {
-          _id: '123',
-          name: 'Haris'
-        },
-        {
-          _id: '456',
-          name: 'Mike'
-        },
-        {
-          _id: '789',
-          name: 'John'
-        },
-        {
-          _id: '1011',
-          name: 'CooCoo'
-        },
-        {
-          _id: '1213',
-          name: 'Pie'
-        }
-      ]
+      matchingUsers: []
     };
+  }
+
+  componentDidMount() {
+    this.props.getAllUsers();
   }
 
   handleChange = e => {
     this.setState({ search: e.target.value });
-    console.log(this.state.search);
-  };
+    // Copy all the users from state to items
+    let items = this.props.users;
 
-  addFriend = userId => {
-    console.log(`Added new friend with id ${userId}`);
+    // Filter all the items in the state and search them by firstName and non case sensitive
+    items = items.filter(
+      item =>
+        item.firstName.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+    );
+
+    // set the state to that searched value and display it below
+    this.setState({ matchingUsers: items });
   };
 
   render() {
@@ -66,17 +57,19 @@ class SearchUsersPage extends React.Component {
               />
             </div>
             <div className='users-container flex-wrap-center'>
-              {matchingUsers !== []
-                ? matchingUsers.map(user => (
-                    <SearchResultItem
-                      key={user._id}
-                      userId={user._id}
-                      profileImg={user.profileImg}
-                      name={user.name}
-                      addFriend={() => this.addFriend(user._id)}
-                    />
-                  ))
-                : null}
+              {matchingUsers.length > 0 ? (
+                matchingUsers.map(user => (
+                  <SearchResultItem
+                    key={user._id}
+                    userId={user._id}
+                    profileImg={user.profileImg}
+                    name={user.firstName}
+                    addFriend={() => this.props.sendFriendRequest(user._id)}
+                  />
+                ))
+              ) : (
+                <p>Start Typing to search the users by name</p>
+              )}
             </div>
           </div>
           <MessagingContainer />
@@ -86,8 +79,14 @@ class SearchUsersPage extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user: { currentUser } }) => ({
-  currentUser
+const mapDispatchToProps = dispatch => ({
+  sendFriendRequest: newFriendId => dispatch(sendFriendRequest(newFriendId)),
+  getAllUsers: () => dispatch(getAllUsers())
 });
 
-export default connect(mapStateToProps)(SearchUsersPage);
+const mapStateToProps = ({ user: { currentUser, users } }) => ({
+  currentUser,
+  users
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchUsersPage);

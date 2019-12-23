@@ -1,56 +1,51 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './edit-friends-container.styles.scss';
+
+import { removeFriend } from '../../redux/user/user.actions';
 
 // Components
 import FriendListItem from '../friend-list-item/friend-list-item.component';
 
 class EditFriendsContainer extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      friends: [
-        {
-          _id: '123',
-          name: 'Alo',
-          profileImg: 'asd'
-        },
-        {
-          _id: '345',
-          name: 'Alo2',
-          profileImg: 'asd2'
-        }
-      ]
-    };
-  }
-
   openChat = friendId => {
     console.log(`Opened chat for friend ${friendId}`);
   };
 
-  removeFriend = friendId => {
-    console.log(`Removed friend ${friendId}`);
-  };
-
   render() {
-    const { friends } = this.state;
+    const { friends } = this.props.currentUser;
     return (
       <div className='friends-container flex-hor-center'>
-        {friends.map(friend => (
-          <FriendListItem
-            key={friend._id}
-            name={friend.name}
-            friendId={friend._id}
-            openChat={() => this.openChat(friend._id)}
-            removeFriend={() => this.removeFriend(friend._id)}
-            profileImg={friend.profileImg}
-            allFriends={true}
-          />
-        ))}
+        {friends.length > 0 ? (
+          friends.map(friend => (
+            <FriendListItem
+              key={friend.user}
+              name={friend.firstName}
+              friendId={friend.user}
+              openChat={() => this.openChat(friend._id)}
+              removeFriend={() => this.props.removeFriend(friend.user)}
+              profileImg={friend.profileImg}
+              allFriends={true}
+            />
+          ))
+        ) : (
+          <p>No friends yet, go to search users and add some friends</p>
+        )}
       </div>
     );
   }
 }
 
-export default EditFriendsContainer;
+const mapDispatchToProps = dispatch => ({
+  removeFriend: friendId => dispatch(removeFriend(friendId))
+});
+
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(EditFriendsContainer);

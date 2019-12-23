@@ -1,57 +1,56 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './friend-requests-container.styles.scss';
+
+import {
+  acceptFriendRequest,
+  declineFriendRequest
+} from '../../redux/user/user.actions';
 
 // Components
 import FriendListItem from '../friend-list-item/friend-list-item.component';
 
 class FriendRequestsContainer extends React.Component {
-  constructor() {
-    super();
-
-    this.state = {
-      friends: [
-        {
-          _id: '123',
-          name: 'Alo',
-          profileImg: 'asd'
-        },
-        {
-          _id: '345',
-          name: 'Alo2',
-          profileImg: 'asd2'
-        }
-      ]
-    };
-  }
-
   acceptFriend = friendId => {
     console.log(`Accepted friend with the id ${friendId}`);
   };
 
-  removeFriend = friendId => {
-    console.log(`Declined friend with the id ${friendId}`);
-  };
-
   render() {
-    const { friends } = this.state;
+    const { friendRequests } = this.props.currentUser;
     return (
       <div className='friend-requests-container flex-hor-center'>
         {/* <!-- Friends Item --> */}
-        {friends.map(friend => (
-          <FriendListItem
-            key={friend._id}
-            name={friend.name}
-            friendId={friend._id}
-            acceptFriend={() => this.acceptFriend(friend._id)}
-            removeFriend={() => this.removeFriend(friend._id)}
-            profileImg={friend.profileImg}
-            friendReq={true}
-          />
-        ))}
+        {friendRequests.length > 0 ? (
+          friendRequests.map(friend => (
+            <FriendListItem
+              key={friend.user}
+              name={friend.firstName}
+              friendId={friend.user}
+              acceptFriend={() => this.props.acceptFriendRequest(friend.user)}
+              removeFriend={() => this.props.declineFriendRequest(friend.user)}
+              profileImg={friend.profileImg}
+              friendReq={true}
+            />
+          ))
+        ) : (
+          <p>You don't have any pending friend requests at this moment</p>
+        )}
       </div>
     );
   }
 }
 
-export default FriendRequestsContainer;
+const mapDispatchToProps = dispatch => ({
+  acceptFriendRequest: friendId => dispatch(acceptFriendRequest(friendId)),
+  declineFriendRequest: friendId => dispatch(declineFriendRequest(friendId))
+});
+
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FriendRequestsContainer);

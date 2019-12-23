@@ -4,11 +4,19 @@ const INITIAL_STATE = {
   currentUser: null,
   lookingAtUser: null,
   loading: true,
+  users: null,
   userErrors: null
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
+    case UserActionTypes.GET_ALL_USERS:
+      return {
+        users: action.payload,
+        currentUser: state.currentUser,
+        loading: false,
+        userErrors: null
+      };
     case UserActionTypes.SET_CURRENT_USER:
       return {
         ...state,
@@ -16,7 +24,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
         loading: false,
         userErrors: null
       };
-    case UserActionTypes.GET_SINGLE_USER: {
+    case UserActionTypes.GET_SINGLE_USER:
+    case UserActionTypes.ADD_FRIEND: {
       return {
         ...state,
         lookingAtUser: action.payload,
@@ -28,6 +37,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         currentUser: null,
+        lookingAtUser: null,
         loading: false,
         userErrors: null
       };

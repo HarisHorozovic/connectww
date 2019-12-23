@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 
 import './sidebar-left.styles.scss';
 
+import { sendFriendRequest } from '../../redux/user/user.actions';
+
 class SidebarLeft extends React.Component {
   render() {
     const {
@@ -14,7 +16,8 @@ class SidebarLeft extends React.Component {
       friends,
       changeLoginCreds,
       deactivateAcc,
-      currentUser
+      currentUser,
+      sendFriendRequest
     } = this.props;
     let userOwnProfile = (
       <div className='btn-container flex-wrap-center'>
@@ -38,7 +41,10 @@ class SidebarLeft extends React.Component {
     // For this get the user we are currently looking at if needed and add to friends functionality
     let userOtherProfile = (
       <div className='btn-container'>
-        <button onClick={`addFriend`} className='btn btn-orange'>
+        <button
+          onClick={() => sendFriendRequest(this.props.match.params.userId)}
+          className='btn btn-orange'
+        >
           Add<span>&#x2b;</span>
         </button>
       </div>
@@ -91,8 +97,14 @@ class SidebarLeft extends React.Component {
   }
 }
 
+const mapDispatchToProps = dispatch => ({
+  sendFriendRequest: newFriendId => dispatch(sendFriendRequest(newFriendId))
+});
+
 const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser
 });
 
-export default withRouter(connect(mapStateToProps)(SidebarLeft));
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(SidebarLeft)
+);

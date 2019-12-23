@@ -36,13 +36,13 @@ const userSchema = mongoose.Schema({
   friends: [
     {
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      name: String
+      firstName: String
     }
   ],
   friendRequests: [
     {
       user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      name: String
+      firstName: String
     }
   ],
   experience: [

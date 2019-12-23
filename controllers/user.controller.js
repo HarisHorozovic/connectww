@@ -70,48 +70,54 @@ exports.addFriend = catchAsync(async (req, res, next) => {
   if (
     await newFriend.updateOne({
       $push: {
-        friendRequests: { user: req.user._id, name: req.user.firstName }
+        friendRequests: { user: req.user._id, firstName: req.user.firstName }
       }
     })
   ) {
-    res.status(200).json({
+    return res.status(200).json({
       status: 'success',
       message: 'Friend Request Sent',
       newFriend
     });
-  } else {
-    res.status(400).json({
-      status: 'fail',
-      message: 'Error occured while sending friend request'
-    });
   }
+
+  return res.status(400).json({
+    status: 'fail',
+    message: 'Error occured while sending friend request'
+  });
 });
 
 // Accept friend request
 exports.acceptFriendRequest = catchAsync(async (req, res, next) => {
   // Get both of the users that will be friends
-  const friend = await User.findById(req.body.friendId);
+  const friend = await User.findById(req.params.friendId);
   const { friendRequests } = req.user;
 
   // Find index of the friend request
   const index = friendRequests.findIndex(
-    request => request.user.toString() === req.body.friendId.toString()
+    request => request.user.toString() === req.params.friendId.toString()
   );
 
   // If there is a index then remove the user from the friend requests and put him in friends
   // Also put the current users id in the friends list of the user that requested friendship
   if (index !== -1) {
-    req.user.friends = friendRequests[index];
+    req.user.friends.unshift(friendRequests[index]);
     friendRequests.splice(index, 1);
 
+    const user = await req.user.save({ validateBeforeSave: false });
     if (
-      (await req.user.save({ validateBeforeSave: false })) &&
+      user &&
       (await friend.updateOne({
-        $push: { friends: { user: req.user._id, name: req.user.name } }
+        $push: {
+          friends: { user: req.user._id, firstName: req.user.firstName }
+        }
       }))
     ) {
       return res.status(200).json({
-        status: 'success'
+        status: 'success',
+        data: {
+          user
+        }
       });
     }
   }
@@ -129,17 +135,21 @@ exports.declineFriendRequest = catchAsync(async (req, res, next) => {
 
   // Find index of the friend request
   const index = friendRequests.findIndex(
-    request => request.user.toString() === req.body.friendId.toString()
+    request => request.user.toString() === req.params.friendId.toString()
   );
 
   // If there is friend request in database remove it
   if (index !== -1) {
     friendRequests.splice(index, 1);
 
-    if (await req.user.save({ validateBeforeSave: false })) {
-      res.status(200).json({
+    const user = await req.user.save({ validateBeforeSave: false });
+    if (user) {
+      return res.status(200).json({
         status: 'success',
-        message: 'Request succesfully removed'
+        message: 'Request succesfully removed',
+        data: {
+          user
+        }
       });
     }
   }
@@ -147,6 +157,52 @@ exports.declineFriendRequest = catchAsync(async (req, res, next) => {
   res.status(400).json({
     status: 'fail',
     message: 'Error removing request, try again later'
+  });
+});
+
+exports.removeFriend = catchAsync(async (req, res, next) => {
+  const { friends } = req.user;
+  const deletingUser = await User.findById(req.params.friendId);
+
+  // Find index of the friend request
+  const index = friends.findIndex(
+    friend => friend.user.toString() === req.params.friendId.toString()
+  );
+
+  const deletingIndex = deletingUser.friends.findIndex(
+    friend => friend.user.toString() === req.user._id.toString()
+  );
+
+  // If there is friend request in database remove it
+  if (index !== -1) {
+    friends.splice(index, 1);
+  } else {
+    return next(new AppError('Something went wrong, try again later', 400));
+  }
+  if (deletingIndex !== -1) {
+    deletingUser.friends.splice(deletingIndex, 1);
+  } else {
+    return next(new AppError('Something went wrong, try again later', 400));
+  }
+
+  const user = await req.user.save({ validateBeforeSave: false });
+  const removedFriend = await deletingUser.save({
+    validateBeforeSave: false
+  });
+  if (user) {
+    return res.status(200).json({
+      status: 'success',
+      message: 'Friend succesfully removed',
+      data: {
+        user,
+        removedFriend
+      }
+    });
+  }
+
+  res.status(400).json({
+    status: 'fail',
+    message: 'Error removing friend, try again later'
   });
 });
 
