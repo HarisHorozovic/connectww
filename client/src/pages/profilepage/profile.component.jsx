@@ -78,31 +78,33 @@ class ProfilePage extends React.Component {
       return (
         <div className='profile-page'>
           <div className='profile-background flex-full-center'>
-            <img src='../../../public/testall.jpg' alt='ProfileBackground' />
+            <img
+              src={
+                'http://localhost:5000/public/img/5dfd192d29624e1fec3e800d/image-5dfd192d29624e1fec3e800d-1577220312406.gif'
+              }
+              alt='ProfileBackground'
+            />
           </div>
           <div className='flex-wrap-container2'>
             <SidebarLeft match={userId} />
             <div className='profile-content flex-hor-center'>
               <div className='card main-header flex-wrap-center'>
-                <div className='user-img'>
-                  <img src='./img/user.png' alt='userImg' />
-                </div>
                 <div className='btn-container flex-wrap-center main-header-subnav'>
                   <span
                     onClick={this.showPosts}
-                    className='btn btn-transparent post-btn'
+                    className='btn btn-main post-btn'
                   >
                     Feed
                   </span>
                   <span
                     onClick={this.showInfo}
-                    className='btn btn-transparent post-btn'
+                    className='btn btn-main post-btn'
                   >
                     Info
                   </span>
                   <span
                     onClick={this.showGallery}
-                    className='btn btn-transparent post-btn'
+                    className='btn btn-main post-btn'
                   >
                     Gallery
                   </span>

@@ -41,7 +41,7 @@ class MessageSend extends React.Component {
           <button className='btn btn-transparent' onClick={this.uploadImg}>
             &#x21ea;
           </button>
-          <button className='btn btn-blue' onClick={this.sendMessage}>
+          <button className='btn btn-main' onClick={this.sendMessage}>
             &#x27A3;
           </button>
         </div>

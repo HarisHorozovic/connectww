@@ -21,7 +21,7 @@ class SidebarLeft extends React.Component {
     } = this.props;
     let userOwnProfile = (
       <div className='btn-container flex-wrap-center'>
-        <Link to='/profile/galery' className='btn btn-grad'>
+        <Link to='/profile/galery' className='btn btn-main'>
           Set new profile image
         </Link>
         {currentUser ? (
@@ -43,7 +43,7 @@ class SidebarLeft extends React.Component {
       <div className='btn-container'>
         <button
           onClick={() => sendFriendRequest(this.props.match.params.userId)}
-          className='btn btn-orange'
+          className='btn btn-main'
         >
           Add<span>&#x2b;</span>
         </button>

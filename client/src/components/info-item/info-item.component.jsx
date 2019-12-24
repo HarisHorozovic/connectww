@@ -3,6 +3,13 @@ import React from 'react';
 import './info-item.styles.scss';
 
 const InfoItem = ({ lookingAtUser }) => {
+  // Format DOB from MongoDB
+  let showDate = '';
+  if (lookingAtUser.DOB) {
+    const created = Date(lookingAtUser.DOB).split(' ');
+    showDate = [created[2], created[1], created[3]].join('-');
+  }
+
   return (
     <div className='overview-item'>
       <p>
@@ -11,7 +18,7 @@ const InfoItem = ({ lookingAtUser }) => {
       </p>
       <p>
         <strong>Date of Birth: </strong>
-        {lookingAtUser.DOB ? lookingAtUser.DOB : null}
+        {showDate}
       </p>
       <p>
         <strong>Location: </strong>

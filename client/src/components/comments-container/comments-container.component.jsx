@@ -21,11 +21,6 @@ class CommentsContainer extends React.Component {
     };
   }
 
-  fetchComments = postId => {
-    //Fetch comments from database
-    // this.setState({ comments: fetchedComments });
-  };
-
   componentDidMount() {
     this.props.getAllCommentsForPost(this.props.postId);
   }
@@ -56,7 +51,7 @@ class CommentsContainer extends React.Component {
             value={this.state.text}
             handleChange={this.handleChange}
           />
-          <button className='btn btn-transparent' onClick={this.postComment}>
+          <button className='btn btn-main' onClick={this.postComment}>
             &#x27A4;
           </button>
         </div>

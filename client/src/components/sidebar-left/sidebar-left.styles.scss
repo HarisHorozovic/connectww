@@ -3,7 +3,7 @@
   padding: 20px 0;
   margin-bottom: 20px;
   background: #203a43;
-  box-shadow: 2px 3px 10px #888888;
+  box-shadow: 2px 3px 10px #e87e04;
 
   .sidebar {
     width: 100%;
@@ -36,13 +36,13 @@
 
     .settings-item {
       margin: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid #e87e04;
       padding: 5px;
       border-radius: 4px;
       cursor: pointer;
 
       &:hover {
-        box-shadow: 2px 3px 10px #888888;
+        box-shadow: 2px 3px 10px #e87e04;
       }
     }
   }

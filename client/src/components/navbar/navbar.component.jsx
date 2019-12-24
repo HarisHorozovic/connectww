@@ -34,7 +34,7 @@ class Navbar extends React.Component {
             className='menu-item my-profile flex-row-end'
           >
             {/* <img src='img/user.png' alt='UserImg' /> */}
-            <p>{firstName}'s Profile</p>
+            {firstName}'s Profile
           </Link>
           <button
             onClick={this.logOutClient}

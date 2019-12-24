@@ -11,10 +11,10 @@ const GalleryItem = ({ location, otherUser }) => {
     >
       <img src='./img/testall.jpg' alt='GalleryImg' />
       <div className='btn-container flex-full-center'>
-        <span href='/likeFn' className='btn btn-transparent post-btn'>
+        <span href='/likeFn' className='btn btn-like post-btn'>
           &#x2764; <span>10</span>
         </span>
-        <span href='/unlikeFn' className='btn btn-transparent post-btn'>
+        <span href='/unlikeFn' className='btn btn-dislike post-btn'>
           &#x2661; <span>10</span>
         </span>
         {otherUser === true ? (

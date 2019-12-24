@@ -1,16 +1,14 @@
 .messages {
   width: 50%;
-  background: #fff;
   margin-right: 10px;
   height: auto;
-  box-shadow: 2px 5px 15px #888888;
+  border: 1px solid #e87e04;
 
   .messages-header {
     width: 100%;
     height: 40px;
     cursor: pointer;
-    background-image: linear-gradient(to top, #fc466b, #3f5efb);
-    background-image: -moz-linear-gradient(to top, #fc466b, #3f5efb);
+    background-color: #e87e04;
   }
 
   .messages-container {

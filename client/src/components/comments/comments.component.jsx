@@ -18,13 +18,16 @@ class CommentItem extends React.Component {
       postId,
       currentUser
     } = this.props;
+    // Format the date from MongoDB
+    const created = Date(createdAt).split(' ');
+    const showDate = [created[2], created[1], created[3]].join('-');
+
     return (
       <div className='comment-item flex-hor-center'>
         <div className='comment-item-header flex-wrap-center'>
           <img src={userImg} alt='userImg' />
-          <p className='lead'>{createdAt}</p>
           <Link to={`/profile/${authorId}`}>{userName}</Link>
-
+          <p className='lead'>{showDate}</p>
           {currentUser._id === authorId ? (
             <button
               className='btn btn-red flex-row-end'

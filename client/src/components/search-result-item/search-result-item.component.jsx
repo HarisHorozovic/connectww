@@ -9,7 +9,7 @@ const SearchResultItem = ({ userId, name, profileImg, addFriend }) => {
       <img src={profileImg} alt='UserImg' />
       <Link to={`/profile/${userId}`}>{name}</Link>
       <div className='btn-container flex-wrap-center'>
-        <button className='btn btn-green' onClick={addFriend}>
+        <button className='btn btn-like' onClick={addFriend}>
           <span>&#x2b;</span> Add
         </button>
       </div>

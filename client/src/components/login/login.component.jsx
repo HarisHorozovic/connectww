@@ -51,7 +51,7 @@ class Login extends React.Component {
           handleChange={this.handleChange}
           value={this.state.password}
         />
-        <button type='submit' className='btn btn-transparent'>
+        <button type='submit' className='btn btn-main'>
           Login
         </button>
       </form>

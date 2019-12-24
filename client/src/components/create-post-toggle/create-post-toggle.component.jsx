@@ -7,7 +7,7 @@ const CreatePostToggle = ({ toggleCreatePost }) => {
     <div className='card flex-full-center post-meta'>
       <img src='./img/user.png' alt='userImg' />
       <div className='btn-container'>
-        <button className='btn btn-grey' onClick={toggleCreatePost}>
+        <button className='btn btn-main' onClick={toggleCreatePost}>
           Post
         </button>
       </div>

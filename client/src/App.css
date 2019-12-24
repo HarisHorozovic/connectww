@@ -68,7 +68,7 @@ a:hover {
 
 input {
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #e87e04;
   background: transparent;
   margin: 20px;
   color: #f4f4f4;
@@ -91,7 +91,7 @@ textarea {
 
 textarea:focus {
   outline: none;
-  box-shadow: 2px 5px 15px #888888;
+  box-shadow: 2px 5px 15px #e87e04;
 }
 
 ::placeholder {
@@ -122,7 +122,7 @@ textarea:focus {
   width: 90%;
   background-color: #203a43;
   margin: 0 10px 30px 10px;
-  box-shadow: 2px 3px 10px #888888;
+  border: 1px solid #e87e04;
 }
 
 .btn {
@@ -140,24 +140,25 @@ textarea:focus {
   font-family: 'Yeon Sung', cursive;
 }
 
-.btn-blue {
-  background-color: #03c6fc;
+.btn-like {
+  background: transparent;
+  color: #dc143c;
   border-radius: 50%;
   font-size: 22px;
 }
 
-.btn-blue:hover {
-  background: transparent;
-  color: #03c6fc;
+.btn-like:hover {
+  box-shadow: 3px 10px 5px #dc143c;
+  color: #dc143c;
 }
 
 .btn-red {
-  background-color: #ff0000;
+  background: transparent;
+  color: #ff0000;
   font-size: 22px;
 }
 .btn-red:hover {
-  background: transparent;
-  color: #ff0000;
+  border: 1px solid #ff0000;
 }
 
 .btn-orange {
@@ -170,12 +171,23 @@ textarea:focus {
   color: #ed5107;
 }
 
-.btn-green {
-  background-color: #32ff6a;
-}
-.btn-green:hover {
+.btn-dislike {
   background: transparent;
-  color: #32ff6a;
+  border-radius: 50%;
+  color: #70dbdb;
+}
+.btn-dislike:hover {
+  background: transparent;
+  box-shadow: 3px 10px 5px #70dbdb;
+}
+.btn-main {
+  color: #f4f4f4;
+  background-color: #e87e04;
+}
+
+.btn-main:hover {
+  color: #e87e04;
+  background: transparent;
 }
 
 .btn-grey {
@@ -231,6 +243,7 @@ textarea:focus {
   .profile-content {
     margin-top: 10px;
     width: 90vw !important;
+    box-shadow: 2px 3px 10px #e87e04;
   }
 }
 

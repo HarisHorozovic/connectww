@@ -50,6 +50,9 @@ class PostItem extends React.Component {
       author
     } = this.props;
     const { hidden, userImg } = this.state;
+    // Format the date from MongoDB
+    const created = Date(createdAt).split(' ');
+    const showDate = [created[2], created[1], created[3]].join('-');
 
     return (
       <div className='card post-item'>
@@ -58,7 +61,7 @@ class PostItem extends React.Component {
             <img src={userImg} alt='userImg' />
             <div className='text-info'>
               <Link to={`/profile/${author._id}`}>{author.firstName}</Link>
-              <p className='lead'>{createdAt}</p>
+              <p className='lead'>{showDate}</p>
             </div>
           </div>
           {this.props.currentUser._id === author._id ? (
@@ -82,22 +85,19 @@ class PostItem extends React.Component {
 
           <div className='btn-container flex-full-center'>
             <div
-              className='btn btn-transparent post-btn'
+              className='btn btn-like post-btn'
               onClick={() => this.handleLike(postId)}
             >
               &#x2764;
               <span>{likes ? likes.length : 0}</span>
             </div>
             <div
-              className='btn btn-transparent post-btn'
+              className='btn btn-dislike post-btn'
               onClick={() => this.handleDislike(postId)}
             >
               &#x2661; <span>{dislikes ? dislikes.length : 0}</span>
             </div>
-            <div
-              className='btn btn-transparent post-btn'
-              onClick={this.showComments}
-            >
+            <div className='btn btn-main post-btn' onClick={this.showComments}>
               &#x275E;
             </div>
           </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
 
 import './gallery-container.styles.scss';
 
@@ -13,19 +14,19 @@ class GalleryContainer extends React.Component {
   }
 
   render() {
-    let isOtherUser = this.props.match;
+    let isOtherUser = this.props.match.params.userId;
     let uploadImg = (
       <div className='main-gallery-header'>
         <div className='flex-wrap-center upload-form'>
           <input type='text' placeholder='Image path' />
-          <button className='btn btn-transparent select-btn'>&#x21ea;</button>
-          <button className='btn btn-grad'>&#x27A4;</button>
+          <button className='btn btn-main select-btn'>&#x21ea;</button>
+          <button className='btn btn-main'>&#x27A4;</button>
         </div>
       </div>
     );
     return (
       <div className='gallery-main-content card flex-hor-center'>
-        {isOtherUser !== undefined ? null : uploadImg}
+        {isOtherUser ? uploadImg : null}
         <div className='main-gallery-container flex-wrap-center'>
           {isOtherUser !== undefined ? (
             <GalleryItem otherUser={false} />
@@ -38,4 +39,4 @@ class GalleryContainer extends React.Component {
   }
 }
 
-export default GalleryContainer;
+export default withRouter(GalleryContainer);

@@ -1,15 +1,17 @@
 .friend-list-item {
   margin: 5px;
   border-radius: 4px;
-  border: 1px solid #ccc;
+  height: 60px;
+  border: 1px solid #e87e04;
   cursor: pointer;
   width: 70%;
-  box-shadow: 2px 5px 15px #888888;
 
   .chat-img {
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
+    margin-right: 5px;
     border-radius: 50%;
+    overflow: hidden;
   }
 
   .green-dot {
@@ -33,6 +35,6 @@
   }
 
   &:hover {
-    box-shadow: none;
+    box-shadow: 2px 5px 15px #e87e04;
   }
 }

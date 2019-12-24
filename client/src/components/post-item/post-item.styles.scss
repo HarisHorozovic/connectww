@@ -1,11 +1,12 @@
 .post-item-header {
   flex-wrap: wrap;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #e87e04;
 
   .user-meta {
     img {
       width: 50px;
       height: 50px;
+      overflow: hidden;
     }
     .text-info {
       margin-left: 10px;
@@ -24,7 +25,7 @@
     width: 90%;
     height: auto;
     margin: 10px;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #e87e04;
 
     img {
       width: 100%;
@@ -35,7 +36,7 @@
   .post-text {
     margin: 10px;
     width: 90%;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #e87e04;
   }
 
   .btn-container {

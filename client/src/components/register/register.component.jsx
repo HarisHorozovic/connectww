@@ -101,7 +101,7 @@ class Register extends React.Component {
           value={this.state.dob}
         />
 
-        <button type='submit' className='btn btn-transparent'>
+        <button type='submit' className='btn btn-main'>
           SignUp
         </button>
       </form>

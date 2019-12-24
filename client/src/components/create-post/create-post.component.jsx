@@ -42,11 +42,11 @@ class CreatePost extends React.Component {
           ></textarea>
           <div className='post-upload'>
             <input type='text' placeholder='Image path' />
-            <a href='/uploadImg' className='btn btn-grey'>
+            <a href='/uploadImg' className='btn btn-main'>
               &#x21ea;
             </a>
             <div
-              className='btn post-img-btn btn-transparent'
+              className='btn post-img-btn btn-main'
               onClick={this.createPost}
             >
               &#x27A4;

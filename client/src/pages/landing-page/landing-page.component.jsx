@@ -44,13 +44,13 @@ class LandingPage extends React.Component {
               <p>Welcome to simple social network ConnectWW</p>
               <div className='landing-btns'>
                 <span
-                  className='btn btn-grey btn-landing'
+                  className='btn btn-main btn-landing'
                   onClick={this.showLogin}
                 >
                   Login
                 </span>
                 <span
-                  className='btn btn-grey btn-landing'
+                  className='btn btn-main btn-landing'
                   onClick={this.showRegister}
                 >
                   Signup

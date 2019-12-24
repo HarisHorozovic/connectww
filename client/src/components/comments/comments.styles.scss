@@ -1,6 +1,6 @@
 .comment-item {
   width: 90%;
-  border: 1px solid #ccc;
+  border: 1px solid #e87e04;
   border-radius: 4px;
   margin: 10px 0;
 
@@ -8,11 +8,18 @@
     flex-wrap: wrap;
     height: 50px;
     width: 80%;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #e87e04;
+
+    a {
+      margin-right: 5px;
+    }
 
     img {
       width: 50px;
       height: 50px;
+      overflow: hidden;
+      border-radius: 50%;
+      margin-right: 10px;
     }
   }
 

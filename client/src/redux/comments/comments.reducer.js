@@ -9,7 +9,6 @@ const INITIAL_STATE = {
 const commentReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case CommentActionTypes.CREATE_COMMENT:
-      console.log(action.payload);
       return {
         ...state,
         comments: state.comments.concat(action.payload),
