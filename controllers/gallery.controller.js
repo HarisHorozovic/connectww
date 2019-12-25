@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const multer = require('multer');
+const sharp = require('sharp');
 
 const Gallery = require('../models/gallery.model');
 
@@ -9,7 +10,7 @@ const AppError = require('../utils/app-error');
 
 exports.checkUploadPath = (req, res, next) => {
   // Create the path for every user we want to upload images
-  const uploadPath = `${process.cwd()}/public/img/${req.user._id}`;
+  const uploadPath = `${process.cwd()}/client/src/img/${req.user._id}`;
   // Check if the folder that we want to save users imgs exist
   if (fs.existsSync(uploadPath)) {
     return next();
@@ -22,15 +23,7 @@ exports.checkUploadPath = (req, res, next) => {
   next();
 };
 
-const multerStorage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, `public/img/${req.user._id}`);
-  },
-  filename: (req, file, cb) => {
-    const ext = file.mimetype.split('/')[1];
-    cb(null, `image-${req.user._id}-${Date.now()}.${ext}`);
-  }
-});
+const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
   if (file.mimetype.startsWith('image')) {
@@ -43,6 +36,25 @@ const multerFilter = (req, file, cb) => {
 const upload = multer({
   storage: multerStorage,
   fileFilter: multerFilter
+});
+
+exports.resizeUploadedImage = catchAsync(async (req, res, next) => {
+  if (!req.file)
+    return next(new AppError('Something went wrong, try again later', 500));
+
+  req.file.filename = `image-${req.user._id}-${Date.now()}.jpeg`;
+
+  await sharp(req.file.buffer)
+    .resize(1366, 768, {
+      fit: 'inside'
+    })
+    .toFormat('jpeg')
+    .jpeg({ quality: 85 })
+    .toFile(
+      `${process.cwd()}/client/src/img/${req.user._id}/${req.file.filename}`
+    );
+
+  next();
 });
 
 exports.uploadPhoto = upload.single('uploadedImg');
@@ -62,7 +74,7 @@ exports.saveImageToDatabase = catchAsync(async (req, res, next) => {
       gallery.images.push({ imgName: req.file.filename });
       return res.status(201).json({
         status: 'success',
-        gallery
+        image: req.file.filename
       });
     }
 
@@ -80,12 +92,14 @@ exports.saveImageToDatabase = catchAsync(async (req, res, next) => {
 
   res.status(201).json({
     status: 'success',
-    gallery: newGallery
+    image: req.file.filename
   });
 });
 
 exports.getUsersGallery = catchAsync(async (req, res, next) => {
-  const gallery = await Gallery.findOne({ user: req.params.userId });
+  const gallery = await Gallery.findOne({ user: req.params.userId }).sort({
+    createdAt: -1
+  });
 
   if (!gallery)
     return next(

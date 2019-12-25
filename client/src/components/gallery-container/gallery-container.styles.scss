@@ -13,6 +13,23 @@
 
       input {
         width: 60%;
+        height: 50px;
+
+        &::-webkit-file-upload-button {
+          background-color: #e87e04;
+          border: none;
+          cursor: pointer;
+          height: 100%;
+          width: 30%;
+        }
+
+        &::-moz-file-upload-button {
+          background-color: #e87e04;
+          border: none;
+          cursor: pointer;
+          height: 100%;
+          width: 30%;
+        }
       }
     }
   }

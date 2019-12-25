@@ -1,7 +1,10 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import './gallery-container.styles.scss';
+
+import { uploadImage } from '../../redux/gallery/gallery.actions';
 
 //Components
 import GalleryItem from '../gallery-item/gallery-item.component';
@@ -10,28 +13,55 @@ class GalleryContainer extends React.Component {
   constructor() {
     super();
 
-    this.state = {};
+    this.state = {
+      fileToUpload: null
+    };
   }
 
+  handleFileChange = e => {
+    this.setState({ fileToUpload: e.target.files[0] });
+  };
+
+  uploadImageClient = () => {
+    const data = new FormData();
+    data.append('uploadedImg', this.state.fileToUpload);
+    this.props.uploadImage(data);
+  };
+
   render() {
-    let isOtherUser = this.props.match.params.userId;
+    const { currentUser, lookingAtUser, images } = this.props;
+    let isCurrentUser =
+      this.props.match.params.userId === currentUser._id ? true : false;
     let uploadImg = (
       <div className='main-gallery-header'>
         <div className='flex-wrap-center upload-form'>
-          <input type='text' placeholder='Image path' />
-          <button className='btn btn-main select-btn'>&#x21ea;</button>
-          <button className='btn btn-main'>&#x27A4;</button>
+          <input
+            type='file'
+            name='uploadedImg'
+            onChange={this.handleFileChange}
+          />
+          <button className='btn btn-main' onClick={this.uploadImageClient}>
+            Upload Image
+          </button>
         </div>
       </div>
     );
+
     return (
       <div className='gallery-main-content card flex-hor-center'>
-        {isOtherUser ? uploadImg : null}
+        {isCurrentUser ? uploadImg : null}
         <div className='main-gallery-container flex-wrap-center'>
-          {isOtherUser !== undefined ? (
-            <GalleryItem otherUser={false} />
+          {images.length > 0 ? (
+            images.map(image => (
+              <GalleryItem
+                key={image._id}
+                isCurrentUser={isCurrentUser}
+                image={image}
+                user={lookingAtUser}
+              />
+            ))
           ) : (
-            <GalleryItem otherUser={true} />
+            <p>No images to show</p>
           )}
         </div>
       </div>
@@ -39,4 +69,15 @@ class GalleryContainer extends React.Component {
   }
 }
 
-export default withRouter(GalleryContainer);
+const mapDispatchToProps = dispatch => ({
+  uploadImage: image => dispatch(uploadImage(image))
+});
+
+const mapStateToProps = ({ user: { currentUser }, gallery: { images } }) => ({
+  currentUser,
+  images
+});
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(GalleryContainer)
+);

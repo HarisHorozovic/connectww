@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import './profile.styles.scss';
 
 import { getUser } from '../../redux/user/user.actions';
+import { getUserGallery } from '../../redux/gallery/gallery.actions';
 
 // Components
 import PostContainer from '../../components/post-container/post-container.component';
@@ -28,6 +29,7 @@ class ProfilePage extends React.Component {
 
   componentDidMount() {
     this.props.getUser(this.props.match.params.userId);
+    this.props.getUserGallery(this.props.match.params.userId);
   }
 
   toggleCreatePost = () => {
@@ -47,6 +49,7 @@ class ProfilePage extends React.Component {
   };
 
   render() {
+    const { lookingAtUser } = this.props;
     if (!this.props.currentUser) {
       return <Redirect to='/' />;
     } else {
@@ -72,18 +75,23 @@ class ProfilePage extends React.Component {
       );
       const gallery = (
         <div className='full-width flex-hor-center'>
-          <GalleryContainer match={userId} />
+          <GalleryContainer />
         </div>
       );
       return (
         <div className='profile-page'>
           <div className='profile-background flex-full-center'>
-            <img
-              src={
-                'http://localhost:5000/public/img/5dfd192d29624e1fec3e800d/image-5dfd192d29624e1fec3e800d-1577220312406.gif'
-              }
-              alt='ProfileBackground'
-            />
+            {lookingAtUser && lookingAtUser.coverImage !== 'user.png' ? (
+              <img
+                src={require(`../../img/${lookingAtUser._id}/${lookingAtUser.coverImage}`)}
+                alt='ProfileBackground'
+              />
+            ) : (
+              <img
+                src={require(`../../img/user.png`)}
+                alt='ProfileBackground'
+              />
+            )}
           </div>
           <div className='flex-wrap-container2'>
             <SidebarLeft match={userId} />
@@ -126,7 +134,8 @@ class ProfilePage extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  getUser: userId => dispatch(getUser(userId))
+  getUser: userId => dispatch(getUser(userId)),
+  getUserGallery: userId => dispatch(getUserGallery(userId))
 });
 
 const mapStateToProps = ({ user: { currentUser, lookingAtUser } }) => ({

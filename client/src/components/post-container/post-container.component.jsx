@@ -26,8 +26,13 @@ class PostContainer extends React.Component {
 
     return (
       <div className='post-item-container flex-hor-center'>
-        {!posts && postLoading === true ? (
+        {!posts.length === 0 && postLoading === true ? (
           <Spinner />
+        ) : posts.length === 0 && postLoading === false ? (
+          <p className='card flex-hor-center'>
+            No posts to show, add some friends to see what they are talking
+            about
+          </p>
         ) : (
           posts.map(post => (
             <PostItem

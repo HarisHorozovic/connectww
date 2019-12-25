@@ -17,17 +17,15 @@ class SidebarLeft extends React.Component {
       changeLoginCreds,
       deactivateAcc,
       currentUser,
+      lookingAtUser,
       sendFriendRequest
     } = this.props;
     let userOwnProfile = (
       <div className='btn-container flex-wrap-center'>
-        <Link to='/profile/galery' className='btn btn-main'>
-          Set new profile image
-        </Link>
         {currentUser ? (
           <Link
             to={`/profile/${currentUser._id}/settings`}
-            className='btn btn-grey'
+            className='btn btn-main'
           >
             {' '}
             Manage Profile
@@ -81,8 +79,15 @@ class SidebarLeft extends React.Component {
     return (
       <div className='sidebar-left content-container flex-hor-center'>
         <div>
-          <img src='./img/user.png' alt='userImg' />
-          <p>My name</p>
+          {lookingAtUser && lookingAtUser.profileImage !== 'user.png' ? (
+            <img
+              src={require(`../../img/${lookingAtUser.profileImage}`)}
+              alt='ProfileBackground'
+            />
+          ) : (
+            <img src={require(`../../img/user.png`)} alt='ProfileBackground' />
+          )}
+          <p>{lookingAtUser ? lookingAtUser.firstName : 'name'}</p>
         </div>
         {!currentUser ? (
           <Redirect to='/' />
@@ -101,8 +106,9 @@ const mapDispatchToProps = dispatch => ({
   sendFriendRequest: newFriendId => dispatch(sendFriendRequest(newFriendId))
 });
 
-const mapStateToProps = ({ user: { currentUser } }) => ({
-  currentUser
+const mapStateToProps = ({ user: { currentUser, lookingAtUser } }) => ({
+  currentUser,
+  lookingAtUser
 });
 
 export default withRouter(

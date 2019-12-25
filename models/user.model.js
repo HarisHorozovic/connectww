@@ -16,6 +16,14 @@ const userSchema = mongoose.Schema({
     required: [true, 'Password is required'],
     select: false
   },
+  profileImage: {
+    type: String,
+    default: 'user.png'
+  },
+  coverImage: {
+    type: String,
+    default: 'user.png'
+  },
   passwordConfirm: {
     type: String,
     required: [true, 'You must confirm your password'],

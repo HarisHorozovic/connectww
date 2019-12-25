@@ -19,7 +19,7 @@ const galleryRouter = require('./routes/gallery.routes');
 
 const app = express();
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(`${__dirname}/client/src`));
 // Initial cors setup, can be changed, but leave it here for now
 app.use(
   cors({
