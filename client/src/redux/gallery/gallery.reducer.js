@@ -3,7 +3,8 @@ import { GalleryActionTypes } from './gallery.types';
 const INITIAL_STATE = {
   images: [],
   galleryErrors: null,
-  galleryLoading: true
+  galleryLoading: true,
+  changeSuccess: false
 };
 
 const galleryReducer = (state = INITIAL_STATE, action) => {
@@ -25,6 +26,14 @@ const galleryReducer = (state = INITIAL_STATE, action) => {
         ...state,
         images: [],
         galleryErrors: action.payload,
+        galleryLoading: false,
+        changeSuccess: false
+      };
+
+    case GalleryActionTypes.UPDATE_MAIN_IMAGE:
+      return {
+        ...state,
+        changeSuccess: true,
         galleryLoading: false
       };
     default:

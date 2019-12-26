@@ -20,12 +20,12 @@ class EditFriendsContainer extends React.Component {
         {friends.length > 0 ? (
           friends.map(friend => (
             <FriendListItem
-              key={friend.user}
+              key={friend._id}
               name={friend.firstName}
-              friendId={friend.user}
+              friendId={friend._id}
               openChat={() => this.openChat(friend._id)}
-              removeFriend={() => this.props.removeFriend(friend.user)}
-              profileImg={friend.profileImg}
+              removeFriend={() => this.props.removeFriend(friend._id)}
+              profileImg={friend.profileImage}
               allFriends={true}
             />
           ))

@@ -4,6 +4,7 @@ import './friend-list.styles.scss';
 
 //Components
 import FriendListItem from '../friend-list-item/friend-list-item.component';
+import { connect } from 'react-redux';
 
 class FriendList extends React.Component {
   constructor() {
@@ -25,7 +26,7 @@ class FriendList extends React.Component {
   };
   render() {
     const { hidden } = this.state;
-    const { friends } = this.props;
+    const { friends } = this.props.currentUser;
     return (
       <div className='friend-list'>
         <div className='friend-list-header' onClick={this.openFriendList}>
@@ -36,7 +37,7 @@ class FriendList extends React.Component {
             hidden ? 'hidden' : ''
           }`}
         >
-          {friends === undefined
+          {friends.length > 0
             ? 'No friends to show'
             : friends.map(friend => (
                 <FriendListItem
@@ -44,7 +45,7 @@ class FriendList extends React.Component {
                   key={friend._id}
                   friendId={friend._id}
                   name={friend.name}
-                  profileImg={friend.profileImg}
+                  profileImg={friend.profileImage}
                 />
               ))}
         </div>
@@ -53,4 +54,8 @@ class FriendList extends React.Component {
   }
 }
 
-export default FriendList;
+const mapStateToProps = ({ user: { currentUser } }) => ({
+  currentUser
+});
+
+export default connect(mapStateToProps)(FriendList);

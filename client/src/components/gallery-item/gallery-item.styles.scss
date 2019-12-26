@@ -1,19 +1,27 @@
 .main-gallery-item {
-  width: 150px;
+  width: 200px;
   margin: 5px;
   font-size: 12px;
 
   img {
-    width: 100%;
-    height: auto;
+    width: 200px;
+    height: 150px;
     object-fit: cover;
   }
-  .btn-container .btn {
-    width: 30px;
-    height: 30px;
-    margin: 10px;
-    display: flex;
-    flex-direction: row;
+  .btn-container {
+    width: 100%;
+    height: 40px;
+
+    .btn {
+      width: 50%;
+      height: 100%;
+      margin-top: 2px;
+      font-size: 14px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
   }
 }
 

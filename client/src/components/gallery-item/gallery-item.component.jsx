@@ -3,7 +3,26 @@ import { connect } from 'react-redux';
 
 import './gallery-item.styles.scss';
 
-const GalleryItem = ({ location, isCurrentUser, image, lookingAtUser }) => {
+import {
+  setCoverImage,
+  setProfileImage
+} from '../../redux/gallery/gallery.actions';
+
+const GalleryItem = ({
+  location,
+  image,
+  lookingAtUser,
+  currentUser,
+  setCoverImage,
+  setProfileImage
+}) => {
+  const setMainClient = () => {
+    setProfileImage(image.imgName);
+  };
+
+  const setCoverClient = () => {
+    setCoverImage(image.imgName);
+  };
   return (
     <div
       className={`${
@@ -14,25 +33,31 @@ const GalleryItem = ({ location, isCurrentUser, image, lookingAtUser }) => {
         src={require(`../../img/${lookingAtUser._id}/${image.imgName}`)}
         alt='ProfileBackground'
       />
-      <div className='btn-container flex-full-center'>
-        <span href='/likeFn' className='btn btn-like post-btn'>
-          &#x2764; <span>10</span>
-        </span>
-        <span href='/unlikeFn' className='btn btn-dislike post-btn'>
-          &#x2661; <span>10</span>
-        </span>
-        {isCurrentUser === true ? (
-          <span className='btn btn-transparent post-btn'>
-            &#x2699; <span>Main</span>
+      {currentUser._id === lookingAtUser._id ? (
+        <div className='btn-container flex-full-center'>
+          <span onClick={setMainClient} className='btn btn-main post-btn'>
+            Set Main
           </span>
-        ) : null}
-      </div>
+          <span
+            onClick={setCoverClient}
+            className='btn btn-transparent post-btn'
+          >
+            Set Cover
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 };
 
-const mapStateToProps = ({ user: { lookingAtUser } }) => ({
-  lookingAtUser
+const mapDispatchToProps = dispatch => ({
+  setCoverImage: newCoverImage => dispatch(setCoverImage(newCoverImage)),
+  setProfileImage: newProfileImg => dispatch(setProfileImage(newProfileImg))
 });
 
-export default connect(mapStateToProps)(GalleryItem);
+const mapStateToProps = ({ user: { lookingAtUser, currentUser } }) => ({
+  lookingAtUser,
+  currentUser
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(GalleryItem);

@@ -53,12 +53,7 @@ class GalleryContainer extends React.Component {
         <div className='main-gallery-container flex-wrap-center'>
           {images.length > 0 ? (
             images.map(image => (
-              <GalleryItem
-                key={image._id}
-                isCurrentUser={isCurrentUser}
-                image={image}
-                user={lookingAtUser}
-              />
+              <GalleryItem key={image._id} image={image} user={lookingAtUser} />
             ))
           ) : (
             <p>No images to show</p>

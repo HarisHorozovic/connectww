@@ -62,7 +62,7 @@ class SearchUsersPage extends React.Component {
                   <SearchResultItem
                     key={user._id}
                     userId={user._id}
-                    profileImg={user.profileImg}
+                    profileImg={user.profileImage}
                     name={user.firstName}
                     addFriend={() => this.props.sendFriendRequest(user._id)}
                   />

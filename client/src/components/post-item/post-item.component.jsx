@@ -18,7 +18,6 @@ class PostItem extends React.Component {
     super();
 
     this.state = {
-      userImg: '',
       hidden: true
     };
   }
@@ -49,7 +48,21 @@ class PostItem extends React.Component {
       dislikes,
       author
     } = this.props;
-    const { hidden, userImg } = this.state;
+    const { hidden } = this.state;
+    let hasLiked = false;
+    let hasDisliked = false;
+    likes.map(like =>
+      like._id === this.props.currentUser._id
+        ? (hasLiked = true)
+        : (hasLiked = false)
+    );
+
+    dislikes.map(dislike =>
+      dislike._id === this.props.currentUser._id
+        ? (hasDisliked = true)
+        : (hasDisliked = false)
+    );
+
     // Format the date from MongoDB
     const created = Date(createdAt).split(' ');
     const showDate = [created[2], created[1], created[3]].join('-');
@@ -58,7 +71,17 @@ class PostItem extends React.Component {
       <div className='card post-item'>
         <div className='flex-full-center post-item-header'>
           <div className='user-meta flex-row-end'>
-            <img src={userImg} alt='userImg' />
+            {author._id !== undefined ? (
+              <img
+                src={require(`../../img${
+                  author.profileImage !== 'user.png' ? `/${author._id}/` : '/'
+                }${author.profileImage}`)}
+                alt='userImg'
+              />
+            ) : (
+              <img src={require('../../img/user.png')} alt='userImg' />
+            )}
+
             <div className='text-info'>
               <Link to={`/profile/${author._id}`}>{author.firstName}</Link>
               <p className='lead'>{showDate}</p>
@@ -74,25 +97,32 @@ class PostItem extends React.Component {
           ) : null}
         </div>
         <div className='post-content flex-hor-center'>
-          {img === null ? (
+          {!img ? (
             <p className='post-text'>{text}</p>
           ) : (
             <div className='post-img flex-hor-center'>
-              <img src={img} alt='postImg' />
+              <img
+                src={require(`../../img/${author._id}/${img}`)}
+                alt='userImg'
+              />
               <p>{text}</p>
             </div>
           )}
 
           <div className='btn-container flex-full-center'>
             <div
-              className='btn btn-like post-btn'
+              className={`btn ${
+                hasLiked === true ? 'btn-transparent' : 'btn-like'
+              } post-btn`}
               onClick={() => this.handleLike(postId)}
             >
               &#x2764;
               <span>{likes ? likes.length : 0}</span>
             </div>
             <div
-              className='btn btn-dislike post-btn'
+              className={`btn ${
+                hasDisliked === true ? 'btn-transparent' : 'btn-dislike'
+              } post-btn`}
               onClick={() => this.handleDislike(postId)}
             >
               &#x2661; <span>{dislikes ? dislikes.length : 0}</span>

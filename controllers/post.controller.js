@@ -9,15 +9,25 @@ const factory = require('./handler.factory');
 const isCurrentUser = (testUser, currentUser) =>
   testUser.toString() === currentUser.toString();
 
-// Create new post
+// Create new post, if there is file, upload file, can refactor for images to have description later
 exports.createPost = catchAsync(async (req, res, next) => {
-  const newPost = {
-    postImg: req.body.postImg,
-    text: req.body.text,
-    author: req.user._id
-  };
+  let newPost = {};
+
+  if (!req.file) {
+    newPost = {
+      text: req.body.text,
+      author: req.user._id
+    };
+  } else {
+    newPost = {
+      postImg: req.file.filename,
+      author: req.user._id
+    };
+  }
 
   const post = await Post.create(newPost);
+
+  console.log(post);
 
   if (!post)
     return next(new AppError('Error creating the post, try again later', 400));

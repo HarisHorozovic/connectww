@@ -78,14 +78,16 @@ class SidebarLeft extends React.Component {
 
     return (
       <div className='sidebar-left content-container flex-hor-center'>
-        <div>
-          {lookingAtUser && lookingAtUser.profileImage !== 'user.png' ? (
+        <div className='sidebar-main-head'>
+          {lookingAtUser && (
             <img
-              src={require(`../../img/${lookingAtUser.profileImage}`)}
-              alt='ProfileBackground'
+              src={require(`../../img${
+                lookingAtUser.profileImage !== 'user.png'
+                  ? `/${lookingAtUser._id}/`
+                  : '/'
+              }${lookingAtUser.profileImage}`)}
+              alt='userImg'
             />
-          ) : (
-            <img src={require(`../../img/user.png`)} alt='ProfileBackground' />
           )}
           <p>{lookingAtUser ? lookingAtUser.firstName : 'name'}</p>
         </div>

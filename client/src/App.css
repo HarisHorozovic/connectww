@@ -202,14 +202,14 @@ textarea:focus {
 
 .btn-transparent {
   background-color: transparent;
-  border: 1px solid #ccc;
+  border: 1px solid #e87e04;
 }
 
 .btn-grey:hover,
 .btn-grad:hover,
 .btn-transparent:hover {
   background: transparent;
-  box-shadow: 2px 5px 15px #ccc;
+  box-shadow: 2px 5px 15px #e87e04;
 }
 
 /* A bit of tweaking for mobile view */

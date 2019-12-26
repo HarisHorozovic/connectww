@@ -4,6 +4,7 @@ const multer = require('multer');
 const sharp = require('sharp');
 
 const Gallery = require('../models/gallery.model');
+const User = require('../models/user.model');
 
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
@@ -39,8 +40,7 @@ const upload = multer({
 });
 
 exports.resizeUploadedImage = catchAsync(async (req, res, next) => {
-  if (!req.file)
-    return next(new AppError('Something went wrong, try again later', 500));
+  if (!req.file) return next();
 
   req.file.filename = `image-${req.user._id}-${Date.now()}.jpeg`;
 
@@ -110,4 +110,32 @@ exports.getUsersGallery = catchAsync(async (req, res, next) => {
     status: 'success',
     gallery
   });
+});
+
+exports.setMainImages = catchAsync(async (req, res, next) => {
+  if (req.body.cover) {
+    const user = await User.updateOne(
+      { _id: req.user._id },
+      { $set: { coverImage: req.body.cover } }
+    );
+    if (!user)
+      return next(
+        new AppError('Error setting the cover image, try again later', 400)
+      );
+    res.status(200).json({
+      status: 'success'
+    });
+  } else if (req.body.profileImg) {
+    const user = await User.updateOne(
+      { _id: req.user._id },
+      { $set: { profileImage: req.body.profileImg } }
+    );
+    if (!user)
+      return next(
+        new AppError('Error setting the profile image, try again later', 400)
+      );
+    res.status(200).json({
+      status: 'success'
+    });
+  }
 });

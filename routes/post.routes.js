@@ -7,6 +7,7 @@ const commentRouter = require('./comment.routes');
 // Controllers
 const postController = require('../controllers/post.controller');
 const authController = require('../controllers/auth.controller');
+const galleryController = require('../controllers/gallery.controller');
 
 // Allow routes only for logged in users, function saves user to the req.user
 router.use(authController.protect);
@@ -23,7 +24,11 @@ router.use('/:id/comments', commentRouter);
 router
   .route('/')
   .get(postController.getAllFriendsPosts)
-  .post(postController.createPost);
+  .post(
+    galleryController.uploadPhoto,
+    galleryController.resizeUploadedImage,
+    postController.createPost
+  );
 
 // @method GET
 // @route /api/v1/posts/me

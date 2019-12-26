@@ -41,18 +41,8 @@ const userSchema = mongoose.Schema({
   gender: { type: String, required: [true, 'You must select your gender'] },
   relationship: { type: String },
   bio: { type: String },
-  friends: [
-    {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      firstName: String
-    }
-  ],
-  friendRequests: [
-    {
-      user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-      firstName: String
-    }
-  ],
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+  friendRequests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
   experience: [
     {
       company: {
@@ -90,6 +80,18 @@ const userSchema = mongoose.Schema({
     default: true,
     select: false
   }
+});
+
+userSchema.pre(/^find/, function(next) {
+  this.populate({
+    path: 'friends',
+    select: '-friends -friendRequests'
+  }).populate({
+    path: 'friendRequests',
+    select: '-friends -friendRequests'
+  });
+
+  next();
 });
 
 // Virtual populate, how we connect children to the parent that the children are referencing

@@ -28,15 +28,15 @@ const postSchema = new mongoose.Schema(
 postSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'author',
-    select: 'firstName lastName userImg'
+    select: 'firstName lastName profileImage'
   })
     .populate({
       path: 'likes',
-      select: 'firstName lastName userImg'
+      select: 'firstName lastName profileImage'
     })
     .populate({
       path: 'dislikes',
-      select: 'firstName, lastName, userImg'
+      select: 'firstName, lastName, profileImage'
     });
 
   next();

@@ -26,7 +26,7 @@ const FriendListItem = ({
   );
   const friendReqBtns = (
     <div className='btn-container friend-request-buttons flex-wrap-center'>
-      <span onClick={acceptFriend} className='btn btn-green'>
+      <span onClick={acceptFriend} className='btn btn-main'>
         &#x2714;
       </span>
       <span onClick={removeFriend} className='btn btn-red'>
@@ -39,7 +39,13 @@ const FriendListItem = ({
       className='friend-list-item flex-full-center'
       onClick={openChatSession}
     >
-      <img src={profileImg} alt={name} className='chat-img' />
+      <img
+        src={require(`../../img${
+          profileImg !== 'user.png' ? `/${friendId}/${profileImg}` : '/'
+        }user.png`)}
+        alt='userImg'
+      />
+
       <Link to={`/profile/${friendId}`}>{name}</Link>
       {allFriends !== undefined && allFriends === true ? friendsBtns : null}
       {friendReq !== undefined && friendReq === true ? friendReqBtns : null}

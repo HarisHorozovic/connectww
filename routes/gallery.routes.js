@@ -25,4 +25,9 @@ router
 // @desc Get all images from one user
 router.route('/:userId').get(galleryController.getUsersGallery);
 
+// @method PATCH
+// @route /api/v1/gallery/set-main
+// @desc Set cover and profile images
+router.route('/set-main').patch(galleryController.setMainImages);
+
 module.exports = router;

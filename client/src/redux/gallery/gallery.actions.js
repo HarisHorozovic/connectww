@@ -19,6 +19,20 @@ export const getUserGallery = userId => dispatch => {
     .catch(err => dispatch(setGalleryError(err.response.data)));
 };
 
+export const setCoverImage = cover => dispatch => {
+  axios
+    .patch(`${apiUrl}/set-main`, { cover }, { withCredentials: true })
+    .then(res => dispatch(changeSuccess()))
+    .catch(err => dispatch(setGalleryError(err.response.data)));
+};
+
+export const setProfileImage = profileImg => dispatch => {
+  axios
+    .patch(`${apiUrl}/set-main`, { profileImg }, { withCredentials: true })
+    .then(res => dispatch(changeSuccess()))
+    .catch(err => dispatch(setGalleryError(err.response.data)));
+};
+
 //Pure functions for handling reducer state
 
 export const getGallery = data => {
@@ -32,6 +46,12 @@ export const newImage = data => {
   return {
     type: GalleryActionTypes.UPLOAD_IMAGE,
     payload: data
+  };
+};
+
+export const changeSuccess = () => {
+  return {
+    type: GalleryActionTypes.UPDATE_MAIN_IMAGE
   };
 };
 

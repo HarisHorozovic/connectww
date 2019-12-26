@@ -52,8 +52,8 @@ exports.addFriend = catchAsync(async (req, res, next) => {
 
   // Map through requests and friends and return the users, then after that check if those new arrays contain req.user._id
   // Convert all IDs to string to enable includes comparison
-  friendRequests.map(request => usersInReq.push(request.user.toString()));
-  friends.map(friend => usersInFriends.push(friend.user.toString()));
+  friendRequests.map(request => usersInReq.push(request._id.toString()));
+  friends.map(friend => usersInFriends.push(friend._id.toString()));
 
   if (
     usersInReq.includes(req.user._id.toString()) ||
@@ -70,7 +70,7 @@ exports.addFriend = catchAsync(async (req, res, next) => {
   if (
     await newFriend.updateOne({
       $push: {
-        friendRequests: { user: req.user._id, firstName: req.user.firstName }
+        friendRequests: req.user._id
       }
     })
   ) {
@@ -95,7 +95,7 @@ exports.acceptFriendRequest = catchAsync(async (req, res, next) => {
 
   // Find index of the friend request
   const index = friendRequests.findIndex(
-    request => request.user.toString() === req.params.friendId.toString()
+    request => request._id.toString() === req.params.friendId.toString()
   );
 
   // If there is a index then remove the user from the friend requests and put him in friends
@@ -109,7 +109,7 @@ exports.acceptFriendRequest = catchAsync(async (req, res, next) => {
       user &&
       (await friend.updateOne({
         $push: {
-          friends: { user: req.user._id, firstName: req.user.firstName }
+          friends: req.user._id
         }
       }))
     ) {
@@ -135,7 +135,7 @@ exports.declineFriendRequest = catchAsync(async (req, res, next) => {
 
   // Find index of the friend request
   const index = friendRequests.findIndex(
-    request => request.user.toString() === req.params.friendId.toString()
+    request => request._id.toString() === req.params.friendId.toString()
   );
 
   // If there is friend request in database remove it
@@ -166,11 +166,11 @@ exports.removeFriend = catchAsync(async (req, res, next) => {
 
   // Find index of the friend request
   const index = friends.findIndex(
-    friend => friend.user.toString() === req.params.friendId.toString()
+    friend => friend._id.toString() === req.params.friendId.toString()
   );
 
   const deletingIndex = deletingUser.friends.findIndex(
-    friend => friend.user.toString() === req.user._id.toString()
+    friend => friend._id.toString() === req.user._id.toString()
   );
 
   // If there is friend request in database remove it
@@ -327,7 +327,7 @@ exports.removeExperience = catchAsync(async (req, res, next) => {
     el => el._id.toString() === req.params.experienceId.toString()
   );
 
-  // If there is friend request in database remove it
+  // If there is experience in database remove it
   if (index !== -1) {
     experience.splice(index, 1);
 
@@ -390,7 +390,7 @@ exports.removeEducation = catchAsync(async (req, res, next) => {
     el => el._id.toString() === req.params.educationId.toString()
   );
 
-  // If there is friend request in database remove it
+  // If there is education in database remove it
   if (index !== -1) {
     education.splice(index, 1);
 
