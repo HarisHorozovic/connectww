@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const Post = require('../models/post.model');
 const Comment = require('../models/comment.model');
 const catchAsync = require('../utils/catch-async');
@@ -13,9 +15,9 @@ const isCurrentUser = (testUser, currentUser) =>
 exports.createPost = catchAsync(async (req, res, next) => {
   let newPost = {};
 
-  if (!req.file) {
+  if (req.body.postText !== undefined) {
     newPost = {
-      text: req.body.text,
+      text: req.body.postText,
       author: req.user._id
     };
   } else {
@@ -26,8 +28,6 @@ exports.createPost = catchAsync(async (req, res, next) => {
   }
 
   const post = await Post.create(newPost);
-
-  console.log(post);
 
   if (!post)
     return next(new AppError('Error creating the post, try again later', 400));
@@ -44,7 +44,7 @@ exports.getAllFriendsPosts = catchAsync(async (req, res, next) => {
 
   const userFriends = [];
 
-  friends.map(friend => userFriends.push(friend.user));
+  friends.map(friend => userFriends.push(friend._id));
 
   const posts = await Post.find({ author: { $in: userFriends } }).sort({
     createdAt: -1
@@ -109,11 +109,23 @@ exports.deletePost = catchAsync(async (req, res, next) => {
   if (!isCurrentUser(post.author._id, req.user._id))
     return next(new AppError('Can not delete other users posts', 400));
 
-  if (await Post.findByIdAndDelete(req.params.id)) {
-    res.status(204).json({
-      status: 'success',
-      message: 'Post succesfully deleted'
+  // If there is post image delete the image from file system as well
+  if (post.postImg) {
+    const removePath = `${process.cwd()}/client/src/img/${req.user._id}/${
+      post.postImg
+    }`;
+
+    // Remove image from File System
+    fs.unlink(removePath, err => {
+      if (err)
+        return next(new AppError('Error deleting image, try again later', 500));
     });
+  }
+
+  if (await Post.findByIdAndDelete(req.params.id)) {
+    return res
+      .status(204)
+      .json({ status: 'success', message: 'Post succesfully deleted' });
   }
 
   res.status(400).json({

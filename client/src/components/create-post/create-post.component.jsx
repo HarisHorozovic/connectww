@@ -16,17 +16,27 @@ class CreatePost extends React.Component {
   }
 
   handleChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ postText: e.target.value });
+  };
+
+  handleFileChange = e => {
+    this.setState({ imageToUpload: e.target.files[0] });
   };
 
   createPost = () => {
-    const postObj = {
-      text: this.state.postText,
-      postImg: this.state.imageToUpload
-    };
-    console.log(this.state);
-    this.setState({ postText: '', postImg: null });
+    let data = new FormData();
+    let postObj = {};
+    if (this.state.imageToUpload) {
+      data.append('uploadedImg', this.state.imageToUpload);
+
+      this.props.createPost(data);
+    } else {
+      console.log(this.state.postText);
+      this.props.createPost({ postText: this.state.postText });
+    }
+
     this.props.createPost(postObj);
+    this.setState({ postText: '', postImg: null });
   };
   render() {
     const { hidden } = this.props;
@@ -50,7 +60,7 @@ class CreatePost extends React.Component {
               className='btn post-img-btn btn-main'
               onClick={this.createPost}
             >
-              &#x27A4;
+              <i className='fa fa-arrow-circle-right'></i>
             </div>
           </div>
         </div>

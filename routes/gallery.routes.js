@@ -14,7 +14,6 @@ router.use(authController.protect);
 router
   .route('/')
   .post(
-    galleryController.checkUploadPath,
     galleryController.uploadPhoto,
     galleryController.resizeUploadedImage,
     galleryController.saveImageToDatabase
@@ -24,6 +23,11 @@ router
 // @route /api/v1/gallery/:userId
 // @desc Get all images from one user
 router.route('/:userId').get(galleryController.getUsersGallery);
+
+// @method DELETE
+// @route /api/v1/gallery/:imageName
+// @desc Remove image from gallery and from file system
+router.route('/image/:imageName').delete(galleryController.removeImage);
 
 // @method PATCH
 // @route /api/v1/gallery/set-main

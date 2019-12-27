@@ -30,7 +30,7 @@ export const removePost = postId => dispatch => {
   return axios
     .delete(`${apiUrl}/${postId}`, { withCredentials: true })
     .then(res => dispatch(removePostState(postId)))
-    .catch(err => dispatch(setPostError(err)));
+    .catch(err => dispatch(setPostError(err.response.data)));
 };
 
 export const likePost = postId => dispatch => {

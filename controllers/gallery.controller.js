@@ -9,21 +9,6 @@ const User = require('../models/user.model');
 const catchAsync = require('../utils/catch-async');
 const AppError = require('../utils/app-error');
 
-exports.checkUploadPath = (req, res, next) => {
-  // Create the path for every user we want to upload images
-  const uploadPath = `${process.cwd()}/client/src/img/${req.user._id}`;
-  // Check if the folder that we want to save users imgs exist
-  if (fs.existsSync(uploadPath)) {
-    return next();
-  }
-  // If it does not exist create the folder for user
-  fs.mkdir(uploadPath, err => {
-    if (err) return next(new AppError('Error creating folder', 500));
-  });
-
-  next();
-};
-
 const multerStorage = multer.memoryStorage();
 
 const multerFilter = (req, file, cb) => {
@@ -138,4 +123,30 @@ exports.setMainImages = catchAsync(async (req, res, next) => {
       status: 'success'
     });
   }
+});
+
+exports.removeImage = catchAsync(async (req, res, next) => {
+  // From where to remove file on file system
+  const removePath = `${process.cwd()}/client/src/img/${req.user._id}/${
+    req.params.imageName
+  }`;
+
+  // Find users gallery
+  const gallery = await Gallery.findOne({ user: req.user._id });
+
+  // Remove selected item from gallery
+  await Gallery.update(
+    { _id: gallery._id },
+    {
+      $pull: { images: { imgName: req.params.imageName } }
+    }
+  );
+
+  // Remove image from File System
+  fs.unlink(removePath, err => {
+    if (err)
+      return next(new AppError('Error deleting image, try again later', 500));
+
+    res.status(204).json({ status: 'success' });
+  });
 });

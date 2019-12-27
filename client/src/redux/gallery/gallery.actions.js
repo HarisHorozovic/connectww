@@ -33,6 +33,13 @@ export const setProfileImage = profileImg => dispatch => {
     .catch(err => dispatch(setGalleryError(err.response.data)));
 };
 
+export const removeImage = imageName => dispatch => {
+  return axios
+    .delete(`${apiUrl}/image/${imageName}`, { withCredentials: true })
+    .then(res => dispatch(deleteImage(imageName)))
+    .catch(err => dispatch(setGalleryError(err.response.data)));
+};
+
 //Pure functions for handling reducer state
 
 export const getGallery = data => {
@@ -45,6 +52,13 @@ export const getGallery = data => {
 export const newImage = data => {
   return {
     type: GalleryActionTypes.UPLOAD_IMAGE,
+    payload: data
+  };
+};
+
+export const deleteImage = data => {
+  return {
+    type: GalleryActionTypes.REMOVE_IMAGE,
     payload: data
   };
 };

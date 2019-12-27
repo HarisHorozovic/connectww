@@ -8,6 +8,7 @@ import { getUser } from '../../redux/user/user.actions';
 import { getUserGallery } from '../../redux/gallery/gallery.actions';
 
 // Components
+import Spinner from '../../components/spinner/spinner.component';
 import PostContainer from '../../components/post-container/post-container.component';
 import SidebarLeft from '../../components/sidebar-left/sidebar-left.component';
 import CreatePostToggle from '../../components/create-post-toggle/create-post-toggle.component';
@@ -49,7 +50,7 @@ class ProfilePage extends React.Component {
   };
 
   render() {
-    const { lookingAtUser } = this.props;
+    const { lookingAtUser, loading } = this.props;
     if (!this.props.currentUser) {
       return <Redirect to='/' />;
     } else {
@@ -78,8 +79,10 @@ class ProfilePage extends React.Component {
           <GalleryContainer />
         </div>
       );
+
       return (
         <div className='profile-page'>
+          {loading === true && <Spinner />}
           <div className='profile-background flex-full-center'>
             {lookingAtUser && lookingAtUser.coverImage !== 'user.png' ? (
               <img
@@ -138,7 +141,9 @@ const mapDispatchToProps = dispatch => ({
   getUserGallery: userId => dispatch(getUserGallery(userId))
 });
 
-const mapStateToProps = ({ user: { currentUser, lookingAtUser } }) => ({
+const mapStateToProps = ({
+  user: { currentUser, lookingAtUser, loading }
+}) => ({
   currentUser,
   lookingAtUser
 });

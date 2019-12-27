@@ -13,7 +13,7 @@ const galleryReducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         images: state.images.concat(action.payload),
-        loading: false
+        galleryLoading: false
       };
     case GalleryActionTypes.GET_GALLERY:
       return {
@@ -35,6 +35,14 @@ const galleryReducer = (state = INITIAL_STATE, action) => {
         ...state,
         changeSuccess: true,
         galleryLoading: false
+      };
+
+    case GalleryActionTypes.REMOVE_IMAGE:
+      return {
+        ...state,
+        images: state.images.filter(image => image.imgName !== action.payload),
+        galleryLoading: false,
+        changeSuccess: true
       };
     default:
       return state;

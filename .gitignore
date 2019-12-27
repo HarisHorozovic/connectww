@@ -19,7 +19,6 @@ _Data
 /client/.env.development.local
 /client/.env.test.local
 /client/.env.production.local
-/client/src/img
 
 /client/npm-debug.log*
 /client/yarn-debug.log*

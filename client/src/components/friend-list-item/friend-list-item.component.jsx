@@ -17,20 +17,20 @@ const FriendListItem = ({
   const friendsBtns = (
     <div className='btn-container friend-buttons flex-wrap-center'>
       <span onClick={openChat} className='btn btn-orange'>
-        &#x2709;
+        <i className='fas fa-envelope'></i>
       </span>
       <span onClick={removeFriend} className='btn btn-red'>
-        &#x2718;
+        <i className='fas fa-user-slash'></i>
       </span>
     </div>
   );
   const friendReqBtns = (
     <div className='btn-container friend-request-buttons flex-wrap-center'>
       <span onClick={acceptFriend} className='btn btn-main'>
-        &#x2714;
+        <i className='fas fa-user-plus'></i>
       </span>
       <span onClick={removeFriend} className='btn btn-red'>
-        &#x2718;
+        <i className='fas fa-user-slash'></i>
       </span>
     </div>
   );
@@ -41,8 +41,8 @@ const FriendListItem = ({
     >
       <img
         src={require(`../../img${
-          profileImg !== 'user.png' ? `/${friendId}/${profileImg}` : '/'
-        }user.png`)}
+          profileImg !== 'user.png' ? `/${friendId}/` : '/'
+        }${profileImg}`)}
         alt='userImg'
       />
 

@@ -42,7 +42,6 @@ class EditMainInfo extends React.Component {
     const userObj = this.state;
 
     this.props.updateUser(userObj);
-    console.log(userObj);
   };
 
   render() {

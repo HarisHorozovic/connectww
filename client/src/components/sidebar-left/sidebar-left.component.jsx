@@ -27,8 +27,7 @@ class SidebarLeft extends React.Component {
             to={`/profile/${currentUser._id}/settings`}
             className='btn btn-main'
           >
-            {' '}
-            Manage Profile
+            <i className='fas fa-cogs'></i> Manage Profile
           </Link>
         ) : (
           <Redirect to='/' />
@@ -43,7 +42,7 @@ class SidebarLeft extends React.Component {
           onClick={() => sendFriendRequest(this.props.match.params.userId)}
           className='btn btn-main'
         >
-          Add<span>&#x2b;</span>
+          Add<i className='fas fa-user-plus'></i>
         </button>
       </div>
     );

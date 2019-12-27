@@ -52,7 +52,7 @@ class CommentsContainer extends React.Component {
             handleChange={this.handleChange}
           />
           <button className='btn btn-main' onClick={this.postComment}>
-            &#x27A4;
+            <i className='fas fa-arrow-circle-right'></i>
           </button>
         </div>
         {comments

@@ -7,6 +7,7 @@ import './gallery-container.styles.scss';
 import { uploadImage } from '../../redux/gallery/gallery.actions';
 
 //Components
+import Spinner from '../spinner/spinner.component';
 import GalleryItem from '../gallery-item/gallery-item.component';
 
 class GalleryContainer extends React.Component {
@@ -29,7 +30,7 @@ class GalleryContainer extends React.Component {
   };
 
   render() {
-    const { currentUser, lookingAtUser, images } = this.props;
+    const { currentUser, lookingAtUser, images, galleryLoading } = this.props;
     let isCurrentUser =
       this.props.match.params.userId === currentUser._id ? true : false;
     let uploadImg = (
@@ -41,7 +42,7 @@ class GalleryContainer extends React.Component {
             onChange={this.handleFileChange}
           />
           <button className='btn btn-main' onClick={this.uploadImageClient}>
-            Upload Image
+            <i className='fas fa-upload'></i>
           </button>
         </div>
       </div>
@@ -50,15 +51,23 @@ class GalleryContainer extends React.Component {
     return (
       <div className='gallery-main-content card flex-hor-center'>
         {isCurrentUser ? uploadImg : null}
-        <div className='main-gallery-container flex-wrap-center'>
-          {images.length > 0 ? (
-            images.map(image => (
-              <GalleryItem key={image._id} image={image} user={lookingAtUser} />
-            ))
-          ) : (
-            <p>No images to show</p>
-          )}
-        </div>
+        {galleryLoading === true ? (
+          <Spinner />
+        ) : (
+          <div className='main-gallery-container flex-wrap-center'>
+            {images.length > 0 ? (
+              images.map(image => (
+                <GalleryItem
+                  key={image._id}
+                  image={image}
+                  user={lookingAtUser}
+                />
+              ))
+            ) : (
+              <p>No images to show</p>
+            )}
+          </div>
+        )}
       </div>
     );
   }
@@ -68,9 +77,13 @@ const mapDispatchToProps = dispatch => ({
   uploadImage: image => dispatch(uploadImage(image))
 });
 
-const mapStateToProps = ({ user: { currentUser }, gallery: { images } }) => ({
+const mapStateToProps = ({
+  user: { currentUser },
+  gallery: { images, galleryLoading }
+}) => ({
   currentUser,
-  images
+  images,
+  galleryLoading
 });
 
 export default withRouter(

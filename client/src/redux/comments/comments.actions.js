@@ -14,10 +14,7 @@ export const createComment = (postId, text) => dispatch => {
         withCredentials: true
       }
     )
-    .then(res => {
-      console.log(res.data);
-      dispatch(newComment(res.data.comment));
-    })
+    .then(res => dispatch(newComment(res.data.comment)))
     .catch(err => dispatch(commentError(err.response.data)));
 };
 

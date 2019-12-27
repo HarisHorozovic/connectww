@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const { promisify } = require('util');
 const crypto = require('crypto');
 
@@ -70,6 +72,17 @@ exports.signup = catchAsync(async (req, res, next) => {
     relationship: req.body.relationship,
     location: req.body.location,
     bio: req.body.bio
+  });
+
+  // CREATE FOLDER FOR UPLOADING IMAGES WHEN REGISTERING NEW USER
+  const uploadPath = `${process.cwd()}/client/src/img/${newUser._id}`;
+  // Check if the folder that we want to save users imgs exist
+  if (fs.existsSync(uploadPath)) {
+    return next();
+  }
+  // If it does not exist create the folder for user
+  fs.mkdir(uploadPath, err => {
+    if (err) return next(new AppError('Error creating folder', 500));
   });
 
   createAndSendToken(newUser, 201, res);

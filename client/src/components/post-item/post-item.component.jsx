@@ -18,8 +18,31 @@ class PostItem extends React.Component {
     super();
 
     this.state = {
-      hidden: true
+      hidden: true,
+      likesCl: 0,
+      dislikesCl: 0,
+      hasLiked: false,
+      hasDisliked: false
     };
+  }
+
+  componentDidMount() {
+    this.setState({
+      likesCl: this.props.likes.length,
+      dislikesCl: this.props.dislikes.length
+    });
+
+    this.props.likes.map(like =>
+      like._id === this.props.currentUser._id
+        ? this.setState({ hasLiked: true })
+        : this.setState({ hasLiked: false })
+    );
+
+    this.props.dislikes.map(dislike =>
+      dislike._id === this.props.currentUser._id
+        ? this.setState({ hasDisliked: true })
+        : this.setState({ hasDisliked: false })
+    );
   }
 
   showComments = () => {
@@ -27,10 +50,22 @@ class PostItem extends React.Component {
   };
 
   handleLike = postId => {
+    this.state.hasLiked === true
+      ? this.setState({ likesCl: this.state.likesCl - 1, hasLiked: false })
+      : this.setState({ likesCl: this.state.likesCl + 1, hasLiked: true });
     this.props.likePost(postId);
   };
 
   handleDislike = postId => {
+    this.state.hasDisliked === true
+      ? this.setState({
+          dislikesCl: this.state.dislikesCl - 1,
+          hasDisliked: false
+        })
+      : this.setState({
+          dislikesCl: this.state.dislikesCl + 1,
+          hasDisliked: true
+        });
     this.props.dislikePost(postId);
   };
 
@@ -39,29 +74,8 @@ class PostItem extends React.Component {
   };
 
   render() {
-    const {
-      postId,
-      img,
-      text,
-      createdAt,
-      likes,
-      dislikes,
-      author
-    } = this.props;
-    const { hidden } = this.state;
-    let hasLiked = false;
-    let hasDisliked = false;
-    likes.map(like =>
-      like._id === this.props.currentUser._id
-        ? (hasLiked = true)
-        : (hasLiked = false)
-    );
-
-    dislikes.map(dislike =>
-      dislike._id === this.props.currentUser._id
-        ? (hasDisliked = true)
-        : (hasDisliked = false)
-    );
+    const { postId, img, text, createdAt, author } = this.props;
+    const { hidden, likesCl, dislikesCl, hasDisliked, hasLiked } = this.state;
 
     // Format the date from MongoDB
     const created = Date(createdAt).split(' ');
@@ -92,7 +106,7 @@ class PostItem extends React.Component {
               className='btn btn-red flex-row-end'
               onClick={() => this.removePost(postId)}
             >
-              &#x2612;
+              <i className='fas fa-trash'></i>
             </button>
           ) : null}
         </div>
@@ -116,8 +130,8 @@ class PostItem extends React.Component {
               } post-btn`}
               onClick={() => this.handleLike(postId)}
             >
-              &#x2764;
-              <span>{likes ? likes.length : 0}</span>
+              <i className='fas fa-heart'></i>
+              <span>{likesCl}</span>
             </div>
             <div
               className={`btn ${
@@ -125,10 +139,10 @@ class PostItem extends React.Component {
               } post-btn`}
               onClick={() => this.handleDislike(postId)}
             >
-              &#x2661; <span>{dislikes ? dislikes.length : 0}</span>
+              <i className='fas fa-heart-broken'></i> <span>{dislikesCl}</span>
             </div>
             <div className='btn btn-main post-btn' onClick={this.showComments}>
-              &#x275E;
+              <i className='fas fa-comments'></i>
             </div>
           </div>
         </div>

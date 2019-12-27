@@ -21,26 +21,25 @@ class Navbar extends React.Component {
         </div>
         <ul className='menu-container flex-row-end'>
           <Link to='/feed' className='menu-item'>
-            Home
+            <i className='fas fa-home'></i>
           </Link>
           <Link to='/users/search' className='menu-item'>
-            Search Users
+            <i className='fas fa-search'></i>
           </Link>
           <Link to='/messaging' className='menu-item'>
-            Messaging
+            <i className='fas fa-envelope'></i>
           </Link>
           <Link
             to={`/profile/${_id}`}
             className='menu-item my-profile flex-row-end'
           >
-            {/* <img src='img/user.png' alt='UserImg' /> */}
-            {firstName}'s Profile
+            <i className='fas fa-user'></i> {firstName}
           </Link>
           <button
             onClick={this.logOutClient}
             className='btn btn-orange menu-item my-profile flex-row-end'
           >
-            LogOut
+            <i className='fas fa-sign-out-alt'></i>
           </button>
         </ul>
       </nav>

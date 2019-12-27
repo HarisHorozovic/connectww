@@ -5,7 +5,8 @@ import './gallery-item.styles.scss';
 
 import {
   setCoverImage,
-  setProfileImage
+  setProfileImage,
+  removeImage
 } from '../../redux/gallery/gallery.actions';
 
 const GalleryItem = ({
@@ -14,7 +15,8 @@ const GalleryItem = ({
   lookingAtUser,
   currentUser,
   setCoverImage,
-  setProfileImage
+  setProfileImage,
+  removeImage
 }) => {
   const setMainClient = () => {
     setProfileImage(image.imgName);
@@ -38,11 +40,14 @@ const GalleryItem = ({
           <span onClick={setMainClient} className='btn btn-main post-btn'>
             Set Main
           </span>
-          <span
-            onClick={setCoverClient}
-            className='btn btn-transparent post-btn'
-          >
+          <span onClick={setCoverClient} className='btn btn-main'>
             Set Cover
+          </span>
+          <span
+            className='btn btn-red btn-img-remove'
+            onClick={() => removeImage(image.imgName)}
+          >
+            <i className='fas fa-trash'></i>
           </span>
         </div>
       ) : null}
@@ -52,7 +57,8 @@ const GalleryItem = ({
 
 const mapDispatchToProps = dispatch => ({
   setCoverImage: newCoverImage => dispatch(setCoverImage(newCoverImage)),
-  setProfileImage: newProfileImg => dispatch(setProfileImage(newProfileImg))
+  setProfileImage: newProfileImg => dispatch(setProfileImage(newProfileImg)),
+  removeImage: imageName => dispatch(removeImage(imageName))
 });
 
 const mapStateToProps = ({ user: { lookingAtUser, currentUser } }) => ({
