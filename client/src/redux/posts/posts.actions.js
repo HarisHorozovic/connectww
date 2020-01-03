@@ -29,7 +29,7 @@ export const getUsersPosts = userId => dispatch => {
 export const removePost = postId => dispatch => {
   return axios
     .delete(`${apiUrl}/${postId}`, { withCredentials: true })
-    .then(res => dispatch(removePostState(postId)))
+    .then(() => dispatch(removePostState(postId)))
     .catch(err => dispatch(setPostError(err.response.data)));
 };
 

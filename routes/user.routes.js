@@ -51,13 +51,15 @@ router.patch('/update-user-data', userController.updateUser);
 // @route /api/v1/users
 // @desc Get all users friends
 
-// @method DELETE
-// @route /api/v1/users
-// @desc Deactivate current users account
 router
   .route('/')
   .get(userController.getUserFriends)
-  .delete(userController.deleteUser);
+  .patch(userController.changeCreds);
+
+// @method POST
+// @route /api/v1/users/account
+// @desc Deactivate current users account
+router.route('/account').post(userController.deleteUser);
 
 // @method GET
 // @route /api/v1/users/all
@@ -76,7 +78,7 @@ router
   .get(userController.getUser)
   .post(userController.addFriend);
 
-router.route('/friends/:friendId').delete(userController.removeFriend);
+router.route('/friends/:friendId').post(userController.removeFriend);
 
 // @method POST
 // @route /api/v1/users/friends/requests

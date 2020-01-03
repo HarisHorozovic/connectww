@@ -15,7 +15,7 @@ const isCurrentUser = (testUser, currentUser) =>
 exports.createPost = catchAsync(async (req, res, next) => {
   let newPost = {};
 
-  if (req.body.postText !== undefined) {
+  if (req.body.postText) {
     newPost = {
       text: req.body.postText,
       author: req.user._id
@@ -121,6 +121,9 @@ exports.deletePost = catchAsync(async (req, res, next) => {
         return next(new AppError('Error deleting image, try again later', 500));
     });
   }
+
+  // Delete comments along with posts
+  await Comment.deleteMany({ post: post._id });
 
   if (await Post.findByIdAndDelete(req.params.id)) {
     return res

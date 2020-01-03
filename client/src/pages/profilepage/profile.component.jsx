@@ -29,7 +29,10 @@ class ProfilePage extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getUser(this.props.match.params.userId);
+    if (!this.props.lookingAtUser) {
+      this.props.getUser(this.props.match.params.userId);
+    }
+
     this.props.getUserGallery(this.props.match.params.userId);
   }
 
@@ -145,7 +148,8 @@ const mapStateToProps = ({
   user: { currentUser, lookingAtUser, loading }
 }) => ({
   currentUser,
-  lookingAtUser
+  lookingAtUser,
+  loading
 });
 
 export default withRouter(

@@ -10,8 +10,11 @@ import {
   dislikePost
 } from '../../redux/posts/posts.actions';
 
+import { getAllCommentsForPost } from '../../redux/comments/comments.actions';
+
 //Components
 import CommentsContainer from '../comments-container/comments-container.component';
+import Spinner from '../spinner/spinner.component';
 
 class PostItem extends React.Component {
   constructor() {
@@ -47,6 +50,7 @@ class PostItem extends React.Component {
 
   showComments = () => {
     this.setState({ hidden: !this.state.hidden });
+    this.props.getAllCommentsForPost(this.props.postId);
   };
 
   handleLike = postId => {
@@ -69,10 +73,6 @@ class PostItem extends React.Component {
     this.props.dislikePost(postId);
   };
 
-  removePost = postId => {
-    this.props.removePost(postId);
-  };
-
   render() {
     const { postId, img, text, createdAt, author } = this.props;
     const { hidden, likesCl, dislikesCl, hasDisliked, hasLiked } = this.state;
@@ -80,6 +80,8 @@ class PostItem extends React.Component {
     // Format the date from MongoDB
     const created = Date(createdAt).split(' ');
     const showDate = [created[2], created[1], created[3]].join('-');
+
+    if (!author) return <Spinner />;
 
     return (
       <div className='card post-item'>
@@ -104,7 +106,7 @@ class PostItem extends React.Component {
           {this.props.currentUser._id === author._id ? (
             <button
               className='btn btn-red flex-row-end'
-              onClick={() => this.removePost(postId)}
+              onClick={() => this.props.removePost(postId)}
             >
               <i className='fas fa-trash'></i>
             </button>
@@ -113,13 +115,16 @@ class PostItem extends React.Component {
         <div className='post-content flex-hor-center'>
           {!img ? (
             <p className='post-text'>{text}</p>
+          ) : !author._id ? (
+            <Spinner />
           ) : (
             <div className='post-img flex-hor-center'>
               <img
                 src={require(`../../img/${author._id}/${img}`)}
                 alt='userImg'
               />
-              <p>{text}</p>
+              {/* Render image description if needed in future */}
+              {/* <p>{text}</p> */}
             </div>
           )}
 
@@ -159,7 +164,8 @@ const mapStateToProps = ({ user: { currentUser } }) => ({
 const mapDispatchToProps = dispatch => ({
   removePost: postId => dispatch(removePost(postId)),
   likePost: postId => dispatch(likePost(postId)),
-  dislikePost: postId => dispatch(dislikePost(postId))
+  dislikePost: postId => dispatch(dislikePost(postId)),
+  getAllCommentsForPost: postId => dispatch(getAllCommentsForPost(postId))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostItem);

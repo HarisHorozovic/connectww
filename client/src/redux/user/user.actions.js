@@ -116,6 +116,20 @@ export const declineFriendRequest = friendId => dispatch => {
     .catch(err => dispatch(setUserErrors(err.response.data)));
 };
 
+export const changeCreds = changeObj => dispatch => {
+  return axios
+    .patch(`${apiUrl}/`, changeObj, { withCredentials: true })
+    .then(() => dispatch(removeCurrentUser()))
+    .catch(err => dispatch(setUserErrors(err.response.data)));
+};
+
+export const deleteAccount = password => dispatch => {
+  return axios
+    .post(`${apiUrl}/account`, { password }, { withCredentials: true })
+    .then(() => dispatch(removeCurrentUser()))
+    .catch(err => dispatch(setUserErrors(err.response.data)));
+};
+
 // Pure functions for handling redux state
 export const setCurrentUser = data => {
   return {

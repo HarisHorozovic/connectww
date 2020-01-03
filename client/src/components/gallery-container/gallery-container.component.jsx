@@ -23,7 +23,9 @@ class GalleryContainer extends React.Component {
     this.setState({ fileToUpload: e.target.files[0] });
   };
 
-  uploadImageClient = () => {
+  uploadImageClient = e => {
+    e.preventDefault();
+
     const data = new FormData();
     data.append('uploadedImg', this.state.fileToUpload);
     this.props.uploadImage(data);

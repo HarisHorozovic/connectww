@@ -1,6 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './deactivate-account.styles.scss';
+
+import { deleteAccount } from '../../redux/user/user.actions';
 
 // Components
 import FormInput from '../form-input/form-input.component';
@@ -10,8 +13,7 @@ class DeactivateAccount extends React.Component {
     super();
 
     this.state = {
-      password: '',
-      confirmPassword: ''
+      password: ''
     };
   }
 
@@ -22,7 +24,7 @@ class DeactivateAccount extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
 
-    console.log(this.state);
+    this.props.deleteAccount(this.state.password);
   };
 
   render() {
@@ -44,15 +46,8 @@ class DeactivateAccount extends React.Component {
               value={this.state.password}
               handleChange={this.handleChange}
             />
-            <FormInput
-              type='password'
-              name='confirmPassword'
-              label='Confirm Your Password'
-              value={this.state.confirmPassword}
-              handleChange={this.handleChange}
-            />
             <button className='btn btn-red'>
-              <span>&#x2612;</span> Deactivate
+              <span>&#x2612;</span> Delete
             </button>
           </div>
         </form>
@@ -61,4 +56,8 @@ class DeactivateAccount extends React.Component {
   }
 }
 
-export default DeactivateAccount;
+const mapDispatchToProps = dispatch => ({
+  deleteAccount: password => dispatch(deleteAccount(password))
+});
+
+export default connect(null, mapDispatchToProps)(DeactivateAccount);

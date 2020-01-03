@@ -269,14 +269,29 @@ exports.updateUser = catchAsync(async (req, res, next) => {
   });
 });
 
-// Deactivate currently logged in uses account
+// Delete currently logged in uses account
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user._id, { active: false });
+  const user = await User.findById(req.user._id)
+    .select('+password')
+    .select('-friends -friendRequests');
 
-  res.status(204).json({
-    status: 'success',
-    data: null
-  });
+  if (!(await user.correctPassword(req.body.password, user.password)))
+    return next(new AppError('Incorect password', 400));
+
+  if (await User.findByIdAndRemove(req.user._id)) {
+    res.cookie('jwt', 'logged-out', {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true
+    });
+
+    return res
+      .status(204)
+      .json({ status: 'success', message: 'Your account has been removed' });
+  }
+
+  res
+    .status(400)
+    .json({ status: 'fail', message: 'Something went wrong, try again later' });
 });
 
 // Add experience
@@ -401,4 +416,70 @@ exports.removeEducation = catchAsync(async (req, res, next) => {
       });
     }
   }
+});
+
+// Change login credentials
+exports.changeCreds = catchAsync(async (req, res, next) => {
+  const {
+    password,
+    passwordConfirm,
+    newPassword,
+    email,
+    newEmail,
+    currentPassword
+  } = req.body;
+
+  const user = await User.findById(req.user._id)
+    .select('+password')
+    .select('-friends -friendRequests');
+
+  if (newPassword !== undefined) {
+    // Update Password and logout the user
+    if (!(await user.correctPassword(currentPassword, user.password)))
+      return next(new AppError('Old password is incorrect', 400));
+    user.password = newPassword;
+    user.passwordConfirm = passwordConfirm;
+
+    if (await user.save()) {
+      res.cookie('jwt', 'logged-out', {
+        expires: new Date(Date.now() + 10 * 1000),
+        httpOnly: true
+      });
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Logout then login again with new password'
+      });
+    }
+
+    return next(new AppError('Something went wrong, try again later', 400));
+  }
+
+  if (!(await user.correctPassword(password, user.password)))
+    return next(new AppError('Password is incorrect', 400));
+
+  if (email.toString() !== user.email.toString())
+    return next(new AppError('Email is incorrect', 400));
+
+  if (
+    await User.findOneAndUpdate(
+      { _id: user._id },
+      { $set: { email: newEmail } },
+      { new: true }
+    )
+  ) {
+    res.cookie('jwt', 'logged-out', {
+      expires: new Date(Date.now() + 10 * 1000),
+      httpOnly: true
+    });
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Logout then login again with new email'
+    });
+  }
+  res.status(500).json({
+    status: 'fail',
+    message: 'Something went wrong, try again later'
+  });
 });

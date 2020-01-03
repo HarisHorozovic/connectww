@@ -25,7 +25,12 @@ class CommentItem extends React.Component {
     return (
       <div className='comment-item flex-hor-center'>
         <div className='comment-item-header flex-wrap-center'>
-          <img src={userImg} alt='userImg' />
+          <img
+            src={require(`../../img${
+              userImg !== 'user.png' ? `/${authorId}/` : '/'
+            }${userImg}`)}
+            alt='userImg'
+          />
           <Link to={`/profile/${authorId}`}>{userName}</Link>
           <p className='lead'>{showDate}</p>
           {currentUser._id === authorId ? (

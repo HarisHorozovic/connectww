@@ -23,19 +23,18 @@ class CreatePost extends React.Component {
     this.setState({ imageToUpload: e.target.files[0] });
   };
 
-  createPost = () => {
+  createPostClient = e => {
+    e.preventDefault();
+
     let data = new FormData();
-    let postObj = {};
     if (this.state.imageToUpload) {
       data.append('uploadedImg', this.state.imageToUpload);
 
       this.props.createPost(data);
     } else {
-      console.log(this.state.postText);
       this.props.createPost({ postText: this.state.postText });
     }
 
-    this.props.createPost(postObj);
     this.setState({ postText: '', postImg: null });
   };
   render() {
@@ -58,7 +57,7 @@ class CreatePost extends React.Component {
             />
             <div
               className='btn post-img-btn btn-main'
-              onClick={this.createPost}
+              onClick={this.createPostClient}
             >
               <i className='fa fa-arrow-circle-right'></i>
             </div>

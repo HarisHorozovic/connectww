@@ -1,6 +1,9 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './change-credentials.styles.scss';
+
+import { changeCreds } from '../../redux/user/user.actions';
 
 // Components
 import FormInput from '../form-input/form-input.component';
@@ -10,10 +13,10 @@ class ChangeCredentials extends React.Component {
     super();
 
     this.state = {
-      oldPassword: '',
       newPassword: '',
-      newPasswordConfirm: '',
+      passwordConfirm: '',
       password: '',
+      currentPassword: '',
       email: '',
       newEmail: ''
     };
@@ -32,19 +35,28 @@ class ChangeCredentials extends React.Component {
       password: this.state.password
     };
 
-    console.log(newEmailData);
+    console.log(
+      'New email data *************************************',
+      newEmailData
+    );
+
+    this.props.changeCreds(newEmailData);
   };
 
   submitNewPassword = e => {
     e.preventDefault();
 
     const newPassword = {
-      password: this.state.oldPassword,
+      currentPassword: this.state.currentPassword,
       newPassword: this.state.newPassword,
-      confirmNewPassword: this.state.newPasswordConfirm
+      passwordConfirm: this.state.passwordConfirm
     };
 
-    console.log(newPassword);
+    console.log(
+      'New password data*******************************',
+      newPassword
+    );
+    this.props.changeCreds(newPassword);
   };
 
   render() {
@@ -84,9 +96,9 @@ class ChangeCredentials extends React.Component {
         >
           <FormInput
             type='password'
-            name='oldPassword'
+            name='currentPassword'
             label='Current Password'
-            value={this.state.oldPassword}
+            value={this.state.currentPassword}
             handleChange={this.handleChange}
           />
           <FormInput
@@ -98,9 +110,9 @@ class ChangeCredentials extends React.Component {
           />
           <FormInput
             type='password'
-            name='newPasswordConfirm'
+            name='passwordConfirm'
             label='Confirm New Password'
-            value={this.state.newPasswordConfirm}
+            value={this.state.passwordConfirm}
             handleChange={this.handleChange}
           />
           <button className='btn btn-transparent'>Update</button>
@@ -110,4 +122,8 @@ class ChangeCredentials extends React.Component {
   }
 }
 
-export default ChangeCredentials;
+const mapDispatchToProps = dispatch => ({
+  changeCreds: data => dispatch(changeCreds(data))
+});
+
+export default connect(null, mapDispatchToProps)(ChangeCredentials);

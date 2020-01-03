@@ -1,14 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-  createComment,
-  getAllCommentsForPost
-} from '../../redux/comments/comments.actions';
+import { createComment } from '../../redux/comments/comments.actions';
 
 import './comments-container.styles.scss';
 
 // Components
+import Spinner from '../spinner/spinner.component';
 import CommentItem from '../comments/comments.component';
 import FormInput from '../form-input/form-input.component';
 
@@ -19,10 +17,6 @@ class CommentsContainer extends React.Component {
     this.state = {
       text: ''
     };
-  }
-
-  componentDidMount() {
-    this.props.getAllCommentsForPost(this.props.postId);
   }
 
   handleChange = e => {
@@ -36,7 +30,7 @@ class CommentsContainer extends React.Component {
   };
 
   render() {
-    const { hidden, comments, postId } = this.props;
+    const { hidden, comments, postId, commentLoading } = this.props;
     return (
       <div
         className={`comment-container flex-hor-center ${
@@ -55,35 +49,36 @@ class CommentsContainer extends React.Component {
             <i className='fas fa-arrow-circle-right'></i>
           </button>
         </div>
-        {comments
-          ? comments.map(comment => {
-              return comment.post === postId ? (
-                <CommentItem
-                  key={comment._id}
-                  text={comment.text}
-                  commentId={comment._id}
-                  userName={comment.author.firstName}
-                  postId={postId}
-                  authorId={comment.author._id}
-                  createdAt={comment.createdAt}
-                  userImg={comment.userImg}
-                />
-              ) : null;
-            })
-          : null}
+        {comments.length < 1 && commentLoading === true ? (
+          <Spinner />
+        ) : (
+          comments.map(comment => {
+            return (
+              <CommentItem
+                key={comment._id}
+                text={comment.text}
+                commentId={comment._id}
+                userName={comment.author.firstName}
+                postId={postId}
+                authorId={comment.author._id}
+                createdAt={comment.createdAt}
+                userImg={comment.author.profileImage}
+              />
+            );
+          })
+        )}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ comments: { comments } }) => ({
+const mapStateToProps = ({ comments: { comments, commentLoading } }) => ({
   comments
 });
 
 const mapDispatchToProps = dispatch => ({
   createComment: (postId, commentBody) =>
-    dispatch(createComment(postId, commentBody)),
-  getAllCommentsForPost: postId => dispatch(getAllCommentsForPost(postId))
+    dispatch(createComment(postId, commentBody))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CommentsContainer);

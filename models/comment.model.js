@@ -26,7 +26,7 @@ commentSchema.index({ author: 1, post: 1 }, { unique: true });
 commentSchema.pre(/^find/, function(next) {
   this.populate({
     path: 'author',
-    select: 'firstName lastName userImg'
+    select: 'firstName lastName profileImage'
   });
 
   next();
