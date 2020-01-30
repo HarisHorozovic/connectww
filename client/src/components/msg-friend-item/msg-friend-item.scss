@@ -1,0 +1,50 @@
+.friend-list-item {
+  margin: 5px;
+  border-radius: 4px;
+  height: 60px;
+  border: 1px solid #e87e04;
+  cursor: pointer;
+  width: 70%;
+
+  &.unread-message {
+    border: 1px solid green;
+    box-shadow: 3px 5px 3px 4px green;
+  }
+
+  img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  .chat-img {
+    width: 50px;
+    height: 50px;
+    margin-right: 5px;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+
+  .green-dot {
+    width: 10px;
+    height: 10px;
+    margin-left: 10px;
+    background: lightgreen;
+    border-radius: 50%;
+  }
+
+  .friend-buttons,
+  .friend-request-buttons {
+    width: 40%;
+
+    .btn {
+      width: 30px;
+      text-align: center;
+      margin: 10px;
+      font-size: 18px;
+    }
+  }
+
+  &:hover {
+    box-shadow: 2px 5px 15px #e87e04;
+  }
+}

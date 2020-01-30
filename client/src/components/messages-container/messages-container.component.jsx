@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './messages-container.styles.scss';
 
@@ -41,6 +42,7 @@ class MessagesContainer extends React.Component {
   };
 
   render() {
+    console.log(this.props.messages);
     const { hidden, messageSession } = this.state;
     return (
       <div className='messages'>
@@ -74,4 +76,8 @@ class MessagesContainer extends React.Component {
   }
 }
 
-export default MessagesContainer;
+const mapStateToProps = ({ messages: { messages } }) => ({
+  messages
+});
+
+export default connect(mapStateToProps)(MessagesContainer);

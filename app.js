@@ -16,6 +16,7 @@ const postRouter = require('./routes/post.routes');
 const userRouter = require('./routes/user.routes');
 const commentRouter = require('./routes/comment.routes');
 const galleryRouter = require('./routes/gallery.routes');
+const messageRouter = require('./routes/message.routes');
 
 const app = express();
 app.use(express.json());
@@ -81,6 +82,7 @@ app.use('/api/v1/posts', postRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/comments', commentRouter);
 app.use('/api/v1/gallery', galleryRouter);
+app.use('/api/v1/messages', messageRouter);
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server`, 404));

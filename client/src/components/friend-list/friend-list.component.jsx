@@ -26,11 +26,12 @@ class FriendList extends React.Component {
   };
   render() {
     const { hidden } = this.state;
-    const { friends } = this.props.currentUser;
+    const { friends } = this.props;
+
     return (
       <div className='friend-list'>
         <div className='friend-list-header' onClick={this.openFriendList}>
-          <p>Online Friends</p>
+          <p>Friends</p>
         </div>
         <div
           className={`friend-list-container flex-hor-center ${
@@ -38,24 +39,26 @@ class FriendList extends React.Component {
           }`}
         >
           {friends.length > 0
-            ? 'No friends to show'
-            : friends.map(friend => (
+            ? friends.map(friend => (
                 <FriendListItem
                   openChatSession={() => this.openChatSession(friend._id)}
                   key={friend._id}
                   friendId={friend._id}
-                  name={friend.name}
+                  name={friend.firstName}
                   profileImg={friend.profileImage}
                 />
-              ))}
+              ))
+            : 'No friends to show'}
         </div>
       </div>
     );
   }
 }
 
+const mapDispatchToProps = dispatch => ({});
+
 const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser
 });
 
-export default connect(mapStateToProps)(FriendList);
+export default connect(mapStateToProps, mapDispatchToProps)(FriendList);

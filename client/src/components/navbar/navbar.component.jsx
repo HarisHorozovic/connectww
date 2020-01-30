@@ -16,7 +16,7 @@ class Navbar extends React.Component {
       <nav className='navbar'>
         <div className='logo-container'>
           <Link to='/feed' className='navbar-logo'>
-            <img src='./img/logo.png' alt='logo' />
+            <img src='./img/user.png' alt='logo' />
           </Link>
         </div>
         <ul className='menu-container flex-row-end'>
