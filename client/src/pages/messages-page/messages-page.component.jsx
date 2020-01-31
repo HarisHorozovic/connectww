@@ -50,7 +50,7 @@ class MessagesPage extends React.Component {
       } else {
         // If curr user is not chatting with the user that sent the message, set that user to the state to
         // So we can show the user that he received message from that particular user
-        this.setState({ newMessageFrom: data.sender._id });
+        this.setState({ newMessageFrom: data.sender });
       }
     });
   }
@@ -75,7 +75,7 @@ class MessagesPage extends React.Component {
       message: this.state.message
     };
     this.props.sendMessage(socket, newMessage);
-    this.setState({ message: '' });
+    this.setState({ message: '', newMessageFrom: '' });
   };
 
   openChatSession = userId => {

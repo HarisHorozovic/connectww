@@ -1,10 +1,13 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './friend-list.styles.scss';
 
 //Components
 import FriendListItem from '../friend-list-item/friend-list-item.component';
-import { connect } from 'react-redux';
+
+// Redux
+import { getMessages } from '../../redux/messages/message.actions';
 
 class FriendList extends React.Component {
   constructor() {
@@ -23,6 +26,7 @@ class FriendList extends React.Component {
     //Open Friend List chat, parse user and friendId, check for the existing session between the users
     //if there is no session, create new chat session
     console.log('Opened chat with the friend whose id is: ', id);
+    this.props.getMessages(id);
   };
   render() {
     const { hidden } = this.state;
@@ -55,7 +59,9 @@ class FriendList extends React.Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({});
+const mapDispatchToProps = dispatch => ({
+  getMessages: userId => dispatch(getMessages(userId))
+});
 
 const mapStateToProps = ({ user: { currentUser } }) => ({
   currentUser

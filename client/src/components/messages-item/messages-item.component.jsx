@@ -13,6 +13,7 @@ const MessageItem = ({ currUser, sender, text, img, createdAt }) => {
     >
       <div className='message-item-header flex-hor-center'>
         <img src='./img/user.png' alt='userImg' />
+        <p>{sender.firstName}</p>
       </div>
 
       <p className='message'>{text}</p>

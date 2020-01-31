@@ -2,6 +2,8 @@
   width: 50%;
   margin-right: 10px;
   height: auto;
+  position: relative;
+
   border: 1px solid #e87e04;
 
   .messages-header {
@@ -19,11 +21,11 @@
   }
 
   .messages-container {
-    height: 350px;
+    height: 300px;
     width: 100%;
+    padding-bottom: 50px;
     overflow-y: scroll;
     overflow-x: hidden;
-    position: relative;
     background: #203a43;
   }
 }

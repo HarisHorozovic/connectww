@@ -30,13 +30,14 @@ const sendCookie = (cookieName, messageSessionId, res) => {
 exports.getMessages = async (req, res, next) => {
   try {
     let messageSession;
+    let userId;
     const { _id } = req.user;
 
     // If the user id is not parsed(loading msgs again on the page reload), take the message session
     // from the cookies
 
     if (req.params.userId.toString() !== 'nms') {
-      const { userId } = req.params;
+      userId = req.params.userId;
 
       messageSession = await MessageSession.find({
         $or: [
@@ -57,6 +58,11 @@ exports.getMessages = async (req, res, next) => {
       messageSession = req.cookies.currentMessageSession;
     }
 
+    // If there is no userId parsed in req.params, take our recepient from the cookies as the userId
+    if (!userId) {
+      userId = req.cookies.recepient;
+    }
+
     const messages = await Message.find({
       messageSession
     }).populate('sender');
@@ -68,6 +74,9 @@ exports.getMessages = async (req, res, next) => {
       });
     }
 
+    // Set the cookie for the recepient
+    // sendCookie('recepient', recepient, res);
+    sendCookie('recepient', userId, res);
     sendCookie('currentMessageSession', messageSession, res);
 
     res.status(200).json({
@@ -122,8 +131,6 @@ exports.sendMessage = async (req, res, next) => {
       recepient
     });
 
-    // Set the cookie for the recepient
-    sendCookie('recepient', recepient, res);
     res.status(201).json({
       status: 'success',
       message: newMessage

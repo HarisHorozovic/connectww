@@ -15,9 +15,6 @@ const MessageSend = ({
         onChange={handleMessageChange}
       />
       <div className='btn-container flex-wrap-center'>
-        {/* <button className='btn btn-transparent' onClick={this.uploadImg}>
-          &#x21ea;
-        </button> */}
         <button className='btn btn-main' onClick={handleMessageSend}>
           &#x27A3;
         </button>
